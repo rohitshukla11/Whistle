@@ -343,8 +343,18 @@ export default function FixturePage() {
     setSelected(id);
   }
 
+  /*
+   * `min-h`, not `h`, on the shell below.
+   *
+   * The desktop layout used to be pinned to exactly one viewport and never
+   * scroll, which was right until the simulation panel took the headroom: the
+   * pitch pane was then shorter than a 780x480 pitch needs, so the pitch was
+   * either squashed (capped by `max-h-full`) or clipped through the middle.
+   * Letting the column grow and the page scroll keeps the pitch's proportions
+   * honest, which is the thing on screen that has to be right.
+   */
   return (
-    <main className="lg:h-[calc(100dvh-3.5rem-3rem)]">
+    <main className="lg:min-h-[calc(100dvh-3.5rem-3rem)]">
       {/* Phone-only header; the desktop top bar carries these above lg. */}
       <div className="mb-3 flex items-center justify-between gap-3 lg:hidden">
         <h1 className="shrink-0 font-display text-[19px] font-extrabold tracking-tight">Whistle</h1>
@@ -379,10 +389,10 @@ export default function FixturePage() {
         </p>
       )}
 
-      <div className="flex h-full flex-col overflow-hidden rounded-[24px] border border-line-soft bg-panel lg:flex-row">
+      <div className="flex flex-col overflow-hidden rounded-[24px] border border-line-soft bg-panel lg:min-h-full lg:flex-row">
         {/* --------------------------------------------------------- match */}
         <section
-          className="order-1 flex min-w-0 flex-1 flex-col gap-4 p-5 lg:order-2 lg:p-6"
+          className="order-1 flex min-w-0 flex-1 flex-col gap-4 border-line-soft p-5 lg:order-2 lg:border-l lg:p-6"
           style={{ background: "#16161A" }}
         >
           <div className="text-center">
@@ -641,7 +651,15 @@ export default function FixturePage() {
         </section>
 
         {/* --------------------------------------------------------- squad */}
-        <section className="order-2 flex min-h-0 flex-col border-line-soft p-5 lg:order-1 lg:h-full lg:w-[560px] lg:shrink-0 lg:border-r lg:p-6">
+        {/*
+          The squad column keeps the viewport height it always had, and scrolls
+          inside it; only the match column is allowed to grow. Un-pinning both
+          let all 36 rows set the row height, and the pitch pane — which centres
+          its pitch — put the pitch about a thousand pixels below the fold. The
+          divider lives on the match column now, because that is the side that
+          reaches the bottom.
+        */}
+        <section className="order-2 flex min-h-0 flex-col p-5 lg:order-1 lg:h-[calc(100dvh-3.5rem-3rem)] lg:w-[560px] lg:shrink-0 lg:self-start lg:p-6">
           <h2 className="sr-only">Squad</h2>
           {loading && players.length === 0 ? (
             <p className="py-10 text-center text-[14px] text-dim">Reading the fixture…</p>

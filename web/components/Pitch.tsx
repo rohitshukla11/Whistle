@@ -108,7 +108,7 @@ export function Pitch({
      */
     <div
       className="relative aspect-[780/545] max-h-full w-full max-w-[780px] overflow-hidden
-                 rounded-[12px] sm:aspect-[780/480]"
+                 rounded-[12px] sm:aspect-[780/480] sm:max-h-none"
       style={{
         // Striped turf: eight bands, alternating.
         background:
