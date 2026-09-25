@@ -158,9 +158,24 @@ export function QueueOrder({
             <span className={side === "sell" ? "text-down" : "text-up"}>{side}</span>{" "}
             {units} × {surname} @ {usdc(unitPrice, 2)}
           </span>
-          <span className="block truncate text-[12px] text-dim">
-            ≈ {usdc(total, 2)} USDC · fills {orderDelayL} s after you confirm
-            {side !== "mint" && ` · cancels if the price moves more than ${(Number(slippage) / 100).toFixed(0)}%`}
+          {/*
+            Before kick-off there is no queue and no delay.
+            `mintPreMatch` settles in the same transaction at the pre-match
+            price, so promising a thirty-second wait described the live path to
+            someone standing in the only path that is instant.
+          */}
+          {/* Wraps rather than truncates: the total is the part that matters,
+              and at a 1190px window it was the part being cut off. */}
+          <span className="block text-[12px] leading-snug text-dim">
+            {live ? (
+              <>
+                ≈ {usdc(total, 2)} USDC · fills {orderDelayL} s after you confirm
+                {side !== "mint" &&
+                  ` · cancels if the price moves more than ${(Number(slippage) / 100).toFixed(0)}%`}
+              </>
+            ) : (
+              <>mints now at the pre-match price · {usdc(total, 2)} USDC</>
+            )}
           </span>
         </span>
 
@@ -286,7 +301,9 @@ export function QueueOrder({
           ? "Sending…"
           : !address
             ? "Connect a wallet"
-            : `Queue ${side} · ≈ ${usdc(total, 2)} USDC`}
+            : live
+              ? `Queue ${side} · ≈ ${usdc(total, 2)} USDC`
+              : `Mint now · ${usdc(total, 2)} USDC`}
       </button>
 
       {queued && (
