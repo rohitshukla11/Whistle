@@ -107,11 +107,49 @@ const squad = {
 writeFileSync(join(out, "squad.json"), `${JSON.stringify(squad, null, 2)}\n`);
 const numbered = squad.players.filter((p) => p.number !== undefined).length;
 console.log(`squad: ${squad.players.length} players, ${numbered} with a shirt number`);
-for (const f of ["abi.ts", "tx.ts", "types.ts"]) {
-  cpSync(join(repo, "oracle", f), join(out, "oracle", f));
+/**
+ * One transform on the way in, for every vendored TypeScript file.
+ *
+ * The repo is ESM and writes `from "./types.js"` for a file that is actually
+ * `types.ts` — which Node resolves and a bundler does not. `scoring.ts` was the
+ * first vendored file with a relative import and it broke the build the moment
+ * it arrived. Stripping the extension leaves a specifier both resolve.
+ */
+const dropJsExt = (src) => src.replace(/(from\s+"\.{1,2}\/[^"]+)\.js"/g, '$1"');
+
+for (const f of ["abi.ts", "tx.ts", "types.ts", "scoring.ts"]) {
+  writeFileSync(join(out, "oracle", f), dropJsExt(readFileSync(join(repo, "oracle", f), "utf8")));
 }
 
-console.log("vendored deployments/ and oracle/ into web/vendor");
+/**
+ * The agent's decision logic, and the match it replays.
+ *
+ * `/api/sim/step` drives the same six agents the terminal runtime drives, and
+ * the whole point of `agent/evaluate.ts` is that neither owns a private copy of
+ * the rules. So the templates are vendored rather than reimplemented, and the
+ * route imports the same functions `pnpm agents` does.
+ *
+ * One transform on the way in: the repo is ESM and writes `from "./types.js"`
+ * for a TypeScript file, which Node resolves and a bundler does not. The
+ * specifiers are rewritten extensionless, which both resolve.
+ */
+mkdirSync(join(out, "agent", "templates"), { recursive: true });
+for (const f of ["evaluate.ts"]) {
+  writeFileSync(join(out, "agent", f), dropJsExt(readFileSync(join(repo, "agent", f), "utf8")));
+}
+for (const f of readdirSync(join(repo, "agent", "templates")).filter((n) => n.endsWith(".ts"))) {
+  writeFileSync(
+    join(out, "agent", "templates", f),
+    dropJsExt(readFileSync(join(repo, "agent", "templates", f), "utf8")),
+  );
+}
+
+// The events the simulation posts, and the names it puts in the status line.
+// The same file the terminal driver reads, copied whole rather than projected —
+// a second projection is a second thing that can disagree with the match.
+cpSync(join(repo, "fixtures", "che-bar-2009-05-06.json"), join(out, "match.json"));
+
+console.log("vendored deployments/, oracle/, agent/ and the match file into web/vendor");
 
 /**
  * Freeze every SETTLED fixture's history into `public/settled/`.
