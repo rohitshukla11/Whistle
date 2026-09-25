@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+
+html, body {
+  background: #11151a;
+  color: #e9edf1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Every number in this app updates in place. Proportional digits make a column
+   of live prices jitter, which is unreadable; tabular figures hold the grid. */
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* Keyboard users get the same affordance as pointer users, in the one accent. */
+:focus-visible {
+  outline: 2px solid #f2a33c;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Motion is only ever a response to a user action or a match event, and even then
+   it is optional. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

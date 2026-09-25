@@ -1,0 +1,20 @@
+# `web/` installs on its own.
+#
+# This file's presence stops pnpm searching upward for the repo root's workspace
+# file. Without it, `pnpm install` run from here resolved against the root
+# instead and installed the root's six tooling packages — leaving `web/` with no
+# `next` binary and a build that died on "next: command not found".
+#
+# Standalone is the intent: `scripts/vendor.mjs` copies in everything `web/`
+# needs from the repo so this directory can be uploaded to a host by itself.
+# Just this directory — `web/` is a standalone app, not a workspace member.
+packages:
+  - "."
+
+allowBuilds:
+  # Optional native accelerators pulled in by the wallet connectors. Both have
+  # pure-JS fallbacks, so a blocked build is slow rather than broken — but pnpm
+  # refuses to run any script unless the package is named here.
+  bufferutil: true
+  utf-8-validate: true
+  keccak: true
