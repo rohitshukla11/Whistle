@@ -831,6 +831,19 @@ export default function AgentProfilePage() {
               <Rule>Transfer or sell the name — the mandate is non-transferable by design</Rule>
               <Rule>Outlive its expiry, or survive a revoke</Rule>
             </ul>
+            {/*
+              Said here rather than left for someone to find in the ABI. The
+              honest shape of the demo is one key doing two jobs, and the page
+              that argues an agent cannot exceed its mandate should be the page
+              that admits where the demo is simpler than the design.
+            */}
+            <p className="border-t border-line-soft px-5 py-3 text-[12px] leading-relaxed text-dim">
+              In this demo the operator and the mandate owner are the same key, because{" "}
+              <code className="text-muted">createAgent</code> is{" "}
+              <code className="text-muted">onlyOperator</code>. Production separates them: minting
+              moves behind a server route or a user-signed request, so granting a mandate never
+              needs the operator&apos;s key.
+            </p>
           </Card>
 
           <Card>

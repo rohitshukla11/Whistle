@@ -26,7 +26,7 @@ const OUT = arg("out", "/tmp/sim-rehearse");
 const RPC = arg("rpc", "http://127.0.0.1:8545");
 const BASE = arg("url", "http://127.0.0.1:3100");
 const TOKEN = process.env.SIM_ADMIN_TOKEN;
-const USER = process.env.TOKYO2_USER_ADDRESS;
+const USER = process.env.DEMO_USER_ADDRESS ?? process.env.TOKYO2_USER_ADDRESS;
 const D = JSON.parse(process.env.DEPLOYMENT_JSON);
 mkdirSync(OUT, { recursive: true });
 
@@ -121,7 +121,12 @@ await wait(1500);
 const created = await page.evaluate(() => { const b = [...document.querySelectorAll("button")].find((x) => /^create agent-/i.test(x.innerText.trim())); if (!b) return "missing"; if (b.disabled) return `disabled: ${b.innerText.trim()}`; b.click(); return "clicked"; });
 say(`beat 2  agent key ${typed}, create button ${created}`);
 await wait(14000);
-say(`beat 2  ${await page.evaluate(() => document.body.innerText.match(/Created [^\n]{0,60}/)?.[0] ?? "(no confirmation text)")}`);
+say(`beat 2  ${await page.evaluate(() => {
+  const t = document.body.innerText;
+  return (t.match(/Created [^\n]{0,70}/)
+    ?? t.match(/(OnlyOperator|reverted|Cannot reach|not set|failed|no Whistle name)[^\n]{0,80}/i)
+    ?? ["(neither success nor error text — check the screenshot)"])[0];
+})}`);
 await shot("02-agent-created");
 
 // ---- beat 3: Start
@@ -134,12 +139,12 @@ await shot("03-started");
 
 // ---- beat 4: Skip to 60'
 say(`beat 4  Skip: ${await panelBtn(/skip to 60/)}`);
-for (let i = 0; i < 40 && (await chain()).minute < 66; i++) await wait(3000);
+for (let i = 0; i < 90 && (await chain()).minute < 66; i++) await wait(3000);
 say(`beat 4  reached ${JSON.stringify(await chain())}`);
 await shot("04-skipped-to-60");
 
 // ---- beat 5: the red card at 66'
-for (let i = 0; i < 30 && (await chain()).minute < 66; i++) await wait(3000);
+for (let i = 0; i < 60 && (await chain()).minute < 66; i++) await wait(3000);
 const atRed = await chain();
 say(`beat 5  RED at 66' — chain now ${atRed.minute}'`);
 await wait(4000);
@@ -170,12 +175,31 @@ await shot("07-order-queued-paused");
 
 // ---- beat 8: Resume, and the paused order fills at the price it was queued at
 say(`beat 8  Resume: ${await panelBtn(/^resume/)}`);
+/**
+ * Scan in chunks the upstream will actually serve.
+ *
+ * A fork forwards `eth_getLogs` to its upstream, and the free tier answers a TEN
+ * BLOCK range and 400s anything wider — which killed the previous run mid-beat.
+ * The driver must not inherit that limit, so it walks backwards from the head in
+ * small windows instead of asking one wide question.
+ */
+const CHUNK = 9n;
+const scanFilled = async (since) => {
+  const head = await pc.getBlockNumber();
+  const out = [];
+  for (let to = head; to >= since; to -= CHUNK + 1n) {
+    const from = to - CHUNK > since ? to - CHUNK : since;
+    const logs = await pc.getLogs({ address: D.whistleHook, event: abi.find((a) => a.name === "OrderFilled"), fromBlock: from, toBlock: to }).catch(() => []);
+    out.push(...logs);
+    if (from === since) break;
+  }
+  return out;
+};
 const fromBlock = await pc.getBlockNumber();
 let fill = null;
-for (let i = 0; i < 40 && !fill; i++) {
+for (let i = 0; i < 60 && !fill; i++) {
   await wait(3000);
-  const logs = await pc.getLogs({ address: D.whistleHook, event: abi.find((a) => a.name === "OrderFilled"), fromBlock: fromBlock - 80n, toBlock: "latest" });
-  fill = logs.find((l) => l.args.orderId === orderId) ?? null;
+  fill = (await scanFilled(fromBlock - 1n)).find((l) => l.args.orderId === orderId) ?? null;
 }
 if (fill) {
   const p = fill.args.referencePrice;
@@ -191,7 +215,10 @@ await wait(5000); await connect(); await wait(8000);
 const revoked = await page.evaluate(() => { const b = [...document.querySelectorAll("button")].find((x) => /^revoke$/i.test(x.innerText.trim()) && !x.disabled); if (!b) return "missing"; b.click(); return "clicked"; });
 say(`beat 9  Revoke: ${revoked}`);
 await wait(16000);
-say(`beat 9  ${await page.evaluate(() => document.body.innerText.match(/revoked [^\n]{0,50}/i)?.[0] ?? "(no confirmation)")}`);
+say(`beat 9  ${await page.evaluate(() => {
+  const t = document.body.innerText;
+  return (t.match(/revoked [^\n]{0,60}/i) ?? t.match(/(reverted|Cannot|failed)[^\n]{0,70}/i) ?? ["(no text)"])[0];
+})}`);
 await shot("09-revoked");
 
 // ---- beat 10: run to full time
