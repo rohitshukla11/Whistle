@@ -12,6 +12,8 @@ import { privateKeyToAccount, generatePrivateKey } from "viem/accounts";
 import { sepolia } from "viem/chains";
 
 const OUT = process.argv[2], RPC = "http://127.0.0.1:8545", BASE = "http://127.0.0.1:3100";
+/** Which mandate the Revoke beat targets. /agents lists every one on the fixture. */
+const REVOKE_TARGET = process.env.REVOKE_TARGET ?? "agent-1.vault.whistle.eth";
 const OP = process.env.OPERATOR, TOKEN = process.env.SIM_ADMIN_TOKEN;
 const D = JSON.parse(process.env.DEPLOYMENT_JSON);
 mkdirSync(OUT, { recursive: true });
@@ -78,7 +80,16 @@ const status = () => page.evaluate(() => document.querySelector('[data-testid="s
 const minuteBox = () => page.evaluate(() => document.querySelector('[data-testid="sim-minute"]')?.textContent?.trim() ?? "");
 const btn = (re, click = true) => page.evaluate((r, c) => { const b = [...document.querySelectorAll('[data-testid="sim-panel"] button')].find((x) => new RegExp(r, "i").test(x.innerText)); if (!b) return "missing"; if (b.disabled) return "disabled"; if (c) b.click(); return "clicked"; }, re.source, click);
 /** Any rendered Note, success or failure, verbatim — a red box is a result. */
-const notes = () => page.evaluate(() => [...document.querySelectorAll("div")].filter((d) => /rounded/.test(d.className) && /border-(away|down|signal|line)/.test(d.className) && d.children.length < 6 && d.innerText.trim().length > 8 && d.innerText.length < 300).map((d) => d.innerText.trim().replace(/\s+/g, " ")).slice(0, 4));
+/**
+ * Every rendered Note, verbatim, with its kind.
+ *
+ * Read from a tag on the component, not guessed at by class: the first version
+ * matched `div`s and `Note` renders a `<p>`, so it silently returned nothing for
+ * every beat, including the ones that succeeded. A driver that cannot see what
+ * the operator was told reports "nothing happened" for a silent failure and a
+ * loud one alike.
+ */
+const notes = () => page.evaluate(() => [...document.querySelectorAll('[data-testid="note"]')].map((n) => `${n.dataset.kind}: ${n.innerText.trim().replace(/\s+/g, " ")}`));
 
 // ---------------------------------------------------------------- beat 1
 const abidal = await pc.readContract({ address: D.matchOracle, abi, functionName: "cardOf", args: [20260923n, 21] });
@@ -162,7 +173,29 @@ await shot("07-filled");
 // ---------------------------------------------------------------- beat 8
 await open("/agents");
 const tRevoke = Date.now();
-const revClick = await page.evaluate(() => { const b = [...document.querySelectorAll("button")].find((x) => /^revoke$/i.test(x.innerText.trim()) && !x.disabled); if (!b) return "missing"; b.click(); return "clicked"; });
+/*
+ * Revoke the agent we NAME, not the first button on the page.
+ *
+ * `/agents` lists every mandate on the fixture -- twelve on the rehearsal fork --
+ * so "the first non-disabled Revoke" was a different owner's agent entirely
+ * while the assertion checked ours. That mismatch is the whole reason this beat
+ * read red when the feature worked.
+ */
+const revClick = await page.evaluate((want) => {
+  const leaf = [...document.querySelectorAll("*")].find((e) => e.children.length === 0 && e.textContent?.includes(want));
+  if (!leaf) return `missing: ${want} not on page`;
+  let node = leaf, b = null;
+  for (let i = 0; i < 8 && node; i++) {
+    b = [...node.querySelectorAll("button")].find((x) => /^revoke$/i.test(x.innerText.trim()));
+    if (b) break;
+    node = node.parentElement;
+  }
+  if (!b) return "missing: no revoke button above the name";
+  const names = node.innerText.match(/agent-\d+\.[a-z0-9]+\.whistle\.eth/g) ?? [];
+  if (names.length !== 1) return `ambiguous: ancestor covers ${names.join(",")}`;
+  b.click();
+  return "clicked";
+}, REVOKE_TARGET);
 await wait(20000);
 const revLatency = ((Date.now() - tRevoke) / 1000).toFixed(0);
 const revNotes = await notes();

@@ -431,9 +431,19 @@ export default function AgentsPage() {
                       </div>
                     </div>
 
+                    {/*
+                      Attributed, because this line is the agent's own testimony.
+                      `last-action` is a record the AGENT holds the write role for,
+                      and it keeps that role after revocation — so a revoked agent
+                      can and does file "refused: mandate revoked". That is useful
+                      and it is not the chain's verdict, so it is not dressed as one.
+                    */}
                     {a.lastAction && (
-                      <p className="mt-2 truncate text-[12px] text-dim">
-                        Last action <span className="text-muted">{a.lastAction}</span>
+                      <p className="mt-2 text-[12px] text-dim">
+                        <span className="truncate">
+                          Last action <span className="text-muted">{a.lastAction}</span>
+                        </span>
+                        <span className="mt-0.5 block text-[11px] text-dim/80">self-reported by the agent</span>
                       </p>
                     )}
                   </div>
@@ -804,7 +814,7 @@ function WhatTheyDid({ agents }: { agents: AgentView[] }) {
   );
 
   return (
-    <Card>
+    <Card testId="what-they-did">
       <CardHead
         title="What they did"
         right={<span className="tnum text-[11px] text-dim">{rows.length} orders</span>}

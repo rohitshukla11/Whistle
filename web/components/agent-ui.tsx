@@ -155,9 +155,23 @@ export function ClubTile({ code, colour }: { code: string; colour: string }) {
 
 // ------------------------------------------------------------------ surfaces
 
-export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function Card({
+  children,
+  className = "",
+  testId,
+}: {
+  children: ReactNode;
+  className?: string;
+  /** So a driver can find one card among a dozen without guessing at classes. */
+  testId?: string;
+}) {
   return (
-    <section className={`rounded-[20px] border border-line-soft bg-panel ${className}`}>{children}</section>
+    <section
+      {...(testId ? { "data-testid": testId } : {})}
+      className={`rounded-[20px] border border-line-soft bg-panel ${className}`}
+    >
+      {children}
+    </section>
   );
 }
 
@@ -244,7 +258,14 @@ export function Note({ kind = "info", children }: { kind?: "info" | "error" | "o
     ok: "border-up/50 text-up",
   };
   return (
-    <p className={`rounded-[12px] border px-3.5 py-2.5 text-[13px] leading-relaxed ${tones[kind]}`}>
+    // Tagged so a driver can read what the operator was told. A rendered note is
+    // a result — "the click did nothing" and "the click said why it failed" are
+    // different outcomes and a test that cannot tell them apart is not a test.
+    <p
+      data-testid="note"
+      data-kind={kind}
+      className={`rounded-[12px] border px-3.5 py-2.5 text-[13px] leading-relaxed ${tones[kind]}`}
+    >
       {children}
     </p>
   );

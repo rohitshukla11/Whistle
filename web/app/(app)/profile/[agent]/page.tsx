@@ -99,8 +99,13 @@ const KEYS = [
   { key: "spend-cap", about: "The most it may ever spend, in USDC. Zero means paused." },
   { key: "slippage", about: "How far the price may move against an order before it is cancelled." },
   { key: "fixture", about: "The one match this mandate is good for." },
-  { key: "status", about: "What the agent says it is doing." },
-  { key: "last-action", about: "The last order it placed." },
+  { key: "status", about: "What the agent says it is doing — self-reported by the agent." },
+  {
+    key: "last-action",
+    about:
+      "The last order it placed — self-reported by the agent, which keeps this write " +
+      "role even after its mandate is revoked. A refused attempt shows up here and nowhere else.",
+  },
   { key: "pnl-live", about: "Its own running result." },
   { key: "matches-played", about: "How many fixtures it has worked." },
   { key: "pnl-history", about: "Its record across matches." },
