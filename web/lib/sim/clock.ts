@@ -21,6 +21,10 @@ export interface Clock {
   originMinute: number;
   /** Pull the clock forward to here, if it is not already past it. */
   skipTo?: number;
+  /** The last event minute the agents have acted on; the step route moves it. */
+  agentsActedAt?: number;
+  /** The newest block this match has written in, as the step route last saw it. State reads start there. */
+  minBlock?: string;
 }
 
 export function minuteOf(c: Clock, now = Date.now()): number {

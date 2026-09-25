@@ -42,7 +42,9 @@ for (const f of readdirSync(deployDir).filter((n) => n.endsWith(".json"))) {
 let fixtures = readdirSync(deployDir)
   .filter((n) => /^fixture-\d+\.json$/.test(n))
   .map((n) => JSON.parse(readFileSync(join(deployDir, n), "utf8")))
-  .sort((a, b) => Number(b.fixtureId) - Number(a.fixtureId));
+  // An explicit `order` wins (Settled showcase, then Demo 1…7); otherwise newest
+  // first. The app defaults to the first unsettled entry in this order.
+  .sort((a, b) => (a.order ?? 1e9) - (b.order ?? 1e9) || Number(b.fixtureId) - Number(a.fixtureId));
 
 /**
  * Drop fixtures that do not exist on the chain this build targets.
@@ -117,7 +119,7 @@ console.log(`squad: ${squad.players.length} players, ${numbered} with a shirt nu
  */
 const dropJsExt = (src) => src.replace(/(from\s+"\.{1,2}\/[^"]+)\.js"/g, '$1"');
 
-for (const f of ["abi.ts", "tx.ts", "types.ts", "scoring.ts"]) {
+for (const f of ["abi.ts", "tx.ts", "types.ts", "scoring.ts", "agent-prep.ts"]) {
   writeFileSync(join(out, "oracle", f), dropJsExt(readFileSync(join(repo, "oracle", f), "utf8")));
 }
 

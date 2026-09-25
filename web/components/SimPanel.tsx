@@ -16,10 +16,14 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { Address } from "viem";
+import { useReadContract, useWriteContract } from "wagmi";
+
+import { agentRegistryAbi } from "../vendor/oracle/abi";
 
 import { minuteOf, type Clock, type Speed } from "../lib/sim/clock";
+import { shortAddress, useOperatorSession } from "../lib/sim/useOperatorSession";
 
-const TOKEN_KEY = "whistle:sim:token";
 const CLOCK_KEY = "whistle:sim:clock";
 const STEP_MS = 3_000;
 
@@ -43,6 +47,9 @@ export interface SimView {
 
 interface Props {
   fixtureId: string;
+  /** This fixture's registry and hook, to check which fixture the agents are bound to. */
+  agentRegistry: Address;
+  whistleHook: Address;
   /** Why Start is unavailable, or null when it is. Decided by the page. */
   blockedReason: string | null;
   /** The page refetches the board after each step so the screen keeps up. */
@@ -62,8 +69,27 @@ function readStored<T>(key: string, fallback: T): T {
   }
 }
 
-export function SimPanel({ fixtureId, blockedReason, onStepped }: Props) {
-  const [token, setToken] = useState("");
+export function SimPanel({ fixtureId, agentRegistry, whistleHook, blockedReason, onStepped }: Props) {
+  /*
+   * Which fixture are the agents bound to?
+   *
+   * AgentRegistry has ONE market — the hook allowed to record agent spend — and
+   * every fixture's deploy points it at its own hook. With eight fixtures, agents
+   * can trade on exactly one. Anywhere else the first agent fill reverts
+   * `OnlyMarket`, and because fills are batched the whole tick reverts, stalling
+   * the queue for everyone. So Start waits until this fixture is the market, and
+   * Activate — one `setMarket` from the connected operator wallet — gets it there.
+   */
+  const op = useOperatorSession(fixtureId, agentRegistry);
+  const market = useReadContract({
+    address: agentRegistry, abi: agentRegistryAbi, functionName: "market",
+    query: { refetchInterval: 8_000 },
+  });
+  const bound = market.data ? market.data.toLowerCase() === whistleHook.toLowerCase() : null;
+  const { isOperator } = op;
+  const signedIn = op.session !== null;
+  const activate = useWriteContract();
+  const [activating, setActivating] = useState(false);
   const [clock, setClock] = useState<Clock>(idleClock);
   const [view, setView] = useState<SimView | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -78,10 +104,16 @@ export function SimPanel({ fixtureId, blockedReason, onStepped }: Props) {
    * every second and therefore NEVER fired a second time. The match died at 10'
    * with the panel cheerfully reporting the last thing it had managed to do.
    */
-  const tokenRef = useRef("");
+  /** The operator's signature header, current as of the last render. */
+  const authRef = useRef<Record<string, string>>({});
+  authRef.current = op.headersFor(op.session);
+  const clearSessionRef = useRef(op.clear);
+  clearSessionRef.current = op.clear;
   const clockRef = useRef<Clock>(clock);
   const steppingRef = useRef(false);
   const onSteppedRef = useRef(onStepped);
+  /** Hashes the last step sent; the next step must see them mined and successful. */
+  const checkRef = useRef<string[]>([]);
   onSteppedRef.current = onStepped;
 
   /** One place that writes the clock, so the ref and the store cannot diverge. */
@@ -96,9 +128,6 @@ export function SimPanel({ fixtureId, blockedReason, onStepped }: Props) {
   }, []);
 
   useEffect(() => {
-    const t = readStored<string>(TOKEN_KEY, "");
-    setToken(t);
-    tokenRef.current = t;
     const stored = readStored<Clock | null>(CLOCK_KEY, null);
     if (stored) {
       clockRef.current = stored;
@@ -108,20 +137,40 @@ export function SimPanel({ fixtureId, blockedReason, onStepped }: Props) {
 
   const call = useCallback(
     async (path: string, extra: Record<string, unknown> = {}): Promise<SimView | null> => {
-      const t = tokenRef.current;
-      if (!t) {
-        setError("Enter the admin token first.");
+      // Reading the match needs no sign-in; anything that writes does.
+      if (path !== "status" && !authRef.current["x-whistle-operator"]) {
+        setError("Sign in as the operator first.");
         return null;
       }
       try {
         const res = await fetch(`/api/sim/${path}`, {
           method: "POST",
-          headers: { "content-type": "application/json", authorization: `Bearer ${t}` },
-          body: JSON.stringify({ fixtureId, ...clockRef.current, ...extra }),
+          headers: { "content-type": "application/json", ...authRef.current },
+          body: JSON.stringify({
+            fixtureId,
+            ...clockRef.current,
+            ...(path === "step" && checkRef.current.length ? { checkTxs: checkRef.current } : {}),
+            ...extra,
+          }),
         });
-        const json = (await res.json()) as SimView;
+        const json = (await res.json()) as SimView & { sent?: string[]; pendingTxs?: string[]; reverted?: string; agentsActed?: number; minBlock?: string };
+        // A revert stops the match: resuming blindly would skip the event.
+        if (json.reverted) {
+          const c = clockRef.current;
+          writeClock({ ...c, running: false, originMinute: minuteOf(c), originMs: Date.now() });
+        }
+        if (path === "step") {
+          // The agents acted on this minute; carry it so the pass is not repeated.
+          if (typeof json.agentsActed === "number") writeClock({ ...clockRef.current, agentsActedAt: json.agentsActed });
+          // The newest block the match has written in: the next step reads state from there, never older.
+          if (json.minBlock && json.minBlock !== clockRef.current.minBlock) writeClock({ ...clockRef.current, minBlock: json.minBlock });
+          if (json.sent?.length) checkRef.current = json.sent;
+          else if (!json.pendingTxs && !json.reverted) checkRef.current = [];
+        }
         if (!res.ok) {
           setError(json.error ?? `HTTP ${res.status}`);
+          // Expired or refused: drop the signature so the panel offers a fresh one.
+          if (res.status === 401 || res.status === 403) clearSessionRef.current();
           if (json.chainState !== undefined) setView(json);
           return null;
         }
@@ -153,13 +202,12 @@ export function SimPanel({ fixtureId, blockedReason, onStepped }: Props) {
 
   // Read the chain on mount: a reload mid-match must resume, not restart.
   useEffect(() => {
-    if (!token) return;
     void call("status");
-  }, [token, call]);
+  }, [call]);
 
   const running = clock.running;
   useEffect(() => {
-    if (!running || !token) return;
+    if (!running || !signedIn) return;
     const id = setInterval(() => {
       if (steppingRef.current || !clockRef.current.running) return;
       steppingRef.current = true;
@@ -171,7 +219,7 @@ export function SimPanel({ fixtureId, blockedReason, onStepped }: Props) {
     }, STEP_MS);
     return () => clearInterval(id);
     // Deliberately NOT [view, onStepped]: see the refs above.
-  }, [running, token, call]);
+  }, [running, signedIn, call]);
 
   /**
    * Closing the tab pauses the match.
@@ -195,16 +243,6 @@ export function SimPanel({ fixtureId, blockedReason, onStepped }: Props) {
     window.addEventListener("pagehide", onHide);
     return () => window.removeEventListener("pagehide", onHide);
   }, []);
-
-  const saveToken = (v: string) => {
-    setToken(v);
-    tokenRef.current = v;
-    try {
-      sessionStorage.setItem(TOKEN_KEY, JSON.stringify(v));
-    } catch {
-      /* ignore */
-    }
-  };
 
   /**
    * Start, with the protected-fixture guard actually costing something.
@@ -254,7 +292,27 @@ export function SimPanel({ fixtureId, blockedReason, onStepped }: Props) {
 
   const live = view?.chainState === 1;
   const done = view?.chainState === 2;
-  const canStart = !blockedReason && Boolean(token) && view?.chainState === 0;
+  const canStart = !blockedReason && signedIn && view?.chainState === 0 && bound === true;
+
+  const onActivate = async () => {
+    setActivating(true);
+    setError(null);
+    try {
+      await activate.writeContractAsync({
+        address: agentRegistry, abi: agentRegistryAbi, functionName: "setMarket", args: [whistleHook],
+      });
+      // Poll until the chain says so; the Start button follows the read, not the click.
+      for (let i = 0; i < 30; i++) {
+        const r = await market.refetch();
+        if (r.data && r.data.toLowerCase() === whistleHook.toLowerCase()) break;
+        await new Promise((res) => setTimeout(res, 3_000));
+      }
+    } catch (err) {
+      setError(`Activate failed: ${err instanceof Error ? err.message.split("\n")[0] : String(err)}`);
+    } finally {
+      setActivating(false);
+    }
+  };
 
   return (
     <section className="rounded-[14px] border border-line bg-surface p-4" aria-labelledby="sim-heading" data-testid="sim-panel">
@@ -273,14 +331,54 @@ export function SimPanel({ fixtureId, blockedReason, onStepped }: Props) {
         </span>
       </div>
 
-      <label className="mb-3 block">
-        <span className="mb-1 block text-[11px] text-dim">Admin token</span>
-        <input
-          type="password" value={token} onChange={(e) => saveToken(e.target.value)}
-          placeholder="SIM_ADMIN_TOKEN" autoComplete="off"
-          className="w-full rounded-[8px] border border-line bg-panel px-2.5 py-1.5 text-[12px] text-text outline-none focus-visible:border-blue"
-        />
-      </label>
+      {/* Who is driving: the operator, proven by one signature. No token. */}
+      <div className="mb-3 flex flex-wrap items-center gap-2 text-[12px]" data-testid="sim-auth">
+        {!op.address ? (
+          <span className="text-dim">Connect the operator wallet to run the simulation.</span>
+        ) : signedIn ? (
+          <span className="text-up">Signed in as operator · {shortAddress(op.address)}</span>
+        ) : op.operator && !isOperator ? (
+          <span className="text-warn">
+            Only the operator wallet ({shortAddress(op.operator)}) can run the simulation. You are connected as{" "}
+            {shortAddress(op.address)}.
+          </span>
+        ) : (
+          <>
+            <button
+              type="button" disabled={op.signing} onClick={() => void op.signIn()}
+              className="rounded-[8px] border border-line px-3 py-1 font-display text-[11px] font-extrabold
+                         uppercase tracking-[0.08em] text-text hover:border-blue disabled:opacity-50"
+            >
+              {op.signing ? "Check your wallet…" : "Sign in as operator"}
+            </button>
+            <span className="text-dim">one signature, good for 6 hours</span>
+          </>
+        )}
+        {op.error && <span className="text-warn">{op.error}</span>}
+      </div>
+
+      {/* Which fixture the agents are bound to — the first thing to check. */}
+      <div className="mb-3 flex flex-wrap items-center gap-2 text-[12px]" data-testid="sim-market">
+        {bound === null ? (
+          <span className="text-dim">checking which fixture the agents are bound to…</span>
+        ) : bound ? (
+          <span className="text-up">agents bound to this fixture</span>
+        ) : (
+          <>
+            <span className="text-warn">agents are bound to another fixture — Activate before Start</span>
+            <button
+              type="button"
+              disabled={activating || !isOperator}
+              onClick={() => void onActivate()}
+              className="rounded-[8px] border border-warn/60 px-3 py-1 font-display text-[11px] font-extrabold
+                         uppercase tracking-[0.08em] text-warn hover:bg-warn/10 disabled:opacity-50"
+            >
+              {activating ? "Activating…" : "Activate"}
+            </button>
+            {!isOperator && <span className="text-dim">connect the operator wallet to activate</span>}
+          </>
+        )}
+      </div>
 
       <div className="mb-3 flex flex-wrap gap-2">
         <button

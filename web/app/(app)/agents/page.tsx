@@ -49,6 +49,7 @@ import { scanOrders, type OrderRow } from "../../../lib/orders";
 import { EXPLORER_LIVE, txUrl } from "../../../lib/explorer";
 import { agentRegistryAbi, describe, useWhistle, whistleHookAbi } from "../../../lib/useWhistle";
 import { confirm } from "../../../vendor/oracle/tx";
+import { shortAddress, useOperatorSession } from "../../../lib/sim/useOperatorSession";
 
 const permissionedResolverAbi = parseAbi([
   "function setText(bytes name, string key, string value)",
@@ -74,6 +75,10 @@ const REGISTERED = 2;
  * after a reload restores the mandate rather than inventing a smaller one.
  */
 const SEEDED_CAP = "2000000000000";
+
+/** The fixture's seeded cap in 6dp, when its deployment file records one. */
+const seededCapOf = (D: { agentCapUSDC?: string }) =>
+  D.agentCapUSDC ? (BigInt(D.agentCapUSDC) * 1_000_000n).toString() : SEEDED_CAP;
 
 interface AgentView {
   address: Address;
@@ -457,7 +462,7 @@ export default function AgentsPage() {
                   ) : state === "paused" ? (
                     <Btn
                       disabled={pending !== null || !address}
-                      onClick={() => setCap(a, capBeforePause.current.get(a.address) ?? SEEDED_CAP, "resumed")}
+                      onClick={() => setCap(a, capBeforePause.current.get(a.address) ?? seededCapOf(D), "resumed")}
                     >
                       {pending === "resume" ? "Resuming…" : "Resume"}
                     </Btn>
@@ -524,8 +529,15 @@ function NewAgent({ onCreated }: { onCreated: () => void }) {
   const { data: wallet } = useWalletClient();
 
   const [playbook, setPlaybook] = useState<Playbook>("protect");
-  const [agentAddress, setAgentAddress] = useState("");
-  const [cap, setCap] = useState("2000");
+  /**
+   * Always a managed key: the server assigns a derived agent key for this fixture
+   * and returns only its address. An external agent address is a direct
+   * `createAgent` call — see the README's Agents section — not a field here.
+   */
+  const [cap, setCap] = useState(D.agentCapUSDC ?? "2000");
+  useEffect(() => setCap(D.agentCapUSDC ?? "2000"), [D.agentCapUSDC]);
+  const op = useOperatorSession(fixtureId.toString(), D.agentRegistry);
+  const [stage, setStage] = useState<"signing" | "assigning" | "creating" | null>(null);
   const [move, setMove] = useState("10");
   const [hours, setHours] = useState<number>(6);
   /**
@@ -540,7 +552,7 @@ function NewAgent({ onCreated }: { onCreated: () => void }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<{ fqdn: string; hash: string } | null>(null);
+  const [result, setResult] = useState<{ fqdn: string; hash: string; agent: Address } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -578,6 +590,26 @@ function NewAgent({ onCreated }: { onCreated: () => void }) {
     setError(null);
     setResult(null);
     try {
+      // One operator signature per session, then the server picks and funds a key.
+      let session = op.session;
+      if (!session) {
+        setStage("signing");
+        session = await op.signIn();
+        if (!session) throw new Error(op.error ?? "Sign in as the operator to get a managed agent key.");
+      }
+      setStage("assigning");
+      const res = await fetch("/api/agents/assign", {
+        method: "POST",
+        headers: { "content-type": "application/json", ...op.headersFor(session) },
+        body: JSON.stringify({ fixtureId: fixtureId.toString() }),
+      });
+      const json = (await res.json()) as { address?: Address; error?: string };
+      if (!res.ok || !json.address) {
+        if (res.status === 401 || res.status === 403) op.clear();
+        throw new Error(json.error ?? `Could not assign an agent key (HTTP ${res.status}).`);
+      }
+      const agent = json.address;
+      setStage("creating");
       const expiry = BigInt(Math.floor(endsAt.getTime() / 1000));
       const salt = BigInt(Math.floor(Math.random() * 1_000_000_000));
 
@@ -588,7 +620,7 @@ function NewAgent({ onCreated }: { onCreated: () => void }) {
         args: [
           {
             user: address,
-            agent: agentAddress as Address,
+            agent,
             fixtureId,
             templateId: BigInt(PLAYBOOK_ID[playbook]),
             spendCapUSDC: BigInt(cap || "0") * 1_000_000n,
@@ -604,20 +636,20 @@ function NewAgent({ onCreated }: { onCreated: () => void }) {
 
       const info = await publicClient.readContract({
         address: D.agentRegistry, abi: agentRegistryAbi, functionName: "agentInfo",
-        args: [agentAddress as Address],
+        args: [agent],
       });
-      setResult({ fqdn: info[7], hash });
-      setAgentAddress("");
+      setResult({ fqdn: info[7], hash, agent });
       onCreated();
     } catch (err) {
       setError(describe(err));
     } finally {
       setBusy(false);
+      setStage(null);
     }
   }
 
   const ready =
-    Boolean(address) && hasAccount !== false && /^0x[0-9a-fA-F]{40}$/.test(agentAddress) && Number(cap) > 0;
+    Boolean(address) && hasAccount !== false && Number(cap) > 0;
 
   return (
     <Card>
@@ -662,21 +694,10 @@ function NewAgent({ onCreated }: { onCreated: () => void }) {
           </p>
         </fieldset>
 
-        <label className="block">
-          <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
-            Agent key
-          </span>
-          <input
-            className={INPUT}
-            placeholder="0x…"
-            value={agentAddress}
-            onChange={(e) => setAgentAddress(e.target.value.trim())}
-          />
-          <span className="mt-1.5 block text-[12px] text-dim">
-            The address the agent signs with. It never holds your funds, and one key can only ever be one
-            agent.
-          </span>
-        </label>
+        <p className="text-[12px] leading-relaxed text-dim">
+          Whistle assigns this agent a key it manages for this fixture, funds its gas and runs it. The key
+          never leaves the server.
+        </p>
 
         <div className="grid gap-3 sm:grid-cols-3">
           <label className="block">
@@ -718,7 +739,11 @@ function NewAgent({ onCreated }: { onCreated: () => void }) {
 
         <Btn tone="cta" className="w-full py-3 text-[13px]" disabled={!ready || busy} onClick={submit}>
           {busy
-            ? "Creating…"
+            ? stage === "signing"
+              ? "Sign in with your wallet…"
+              : stage === "assigning"
+                ? "Preparing the agent key…"
+                : "Creating…"
             : !address
               ? "Connect a wallet"
               : hasAccount === false
@@ -737,7 +762,9 @@ function NewAgent({ onCreated }: { onCreated: () => void }) {
         {error && <Note kind="error">{error}</Note>}
         {result && (
           <Note kind="ok">
-            Created <strong>{result.fqdn}</strong> with its own resolver. <TxRef hash={result.hash} />
+            Created <strong>{result.fqdn}</strong> with its own resolver
+            , on the Whistle-managed key <code className="text-muted">{result.agent}</code>.{" "}
+            <TxRef hash={result.hash} />
           </Note>
         )}
         <p className="max-w-[68ch] text-[12px] leading-relaxed text-dim">

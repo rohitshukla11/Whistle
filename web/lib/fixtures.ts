@@ -42,6 +42,12 @@ export interface FixtureDeployment {
   fixtureFactory: Address;
   usdc: Address;
   rootRegistry?: Address;
+  /**
+   * The spend cap, in whole USDC, the seed gave this fixture's pre-created
+   * mandates. The New agent form defaults to it and Resume falls back to it.
+   * Absent on fixtures seeded before caps were sized for the stage (2,000,000).
+   */
+  agentCapUSDC?: string;
 }
 
 /** Newest first. The default is the first entry that has not settled. */

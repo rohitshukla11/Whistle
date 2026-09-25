@@ -148,40 +148,5 @@ export function TxLink({ hash }: { hash: string }) {
   );
 }
 
-/**
- * Which match you are looking at.
- *
- * A new fixture means a new venue, not just a new id, so this changes the whole
- * set of addresses under the app. It reads as a quiet control rather than a
- * headline: the fixture is context, and the loud thing on screen should still be
- * a price that just moved.
- */
-export function FixtureSwitcher({
-  all,
-  current,
-  onSelect,
-}: {
-  all: { fixtureId: string; label: string; settled: boolean }[];
-  current: string;
-  onSelect: (id: string) => void;
-}) {
-  if (all.length < 2) return null;
-  return (
-    <label className="flex min-w-0 items-center gap-2">
-      <span className="sr-only">Fixture</span>
-      <select
-        value={current}
-        onChange={(e) => onSelect(e.target.value)}
-        className="min-w-0 max-w-[220px] truncate rounded border border-rule bg-dusk px-2 py-1.5
-                   text-[12px] text-slate outline-none transition-colors
-                   hover:text-chalk focus-visible:border-signal"
-      >
-        {all.map((f) => (
-          <option key={f.fixtureId} value={f.fixtureId}>
-            {f.label}
-          </option>
-        ))}
-      </select>
-    </label>
-  );
-}
+// Reads each fixture's live state, so it is a client component of its own.
+export { FixtureSwitcher } from "./FixtureSwitcher";

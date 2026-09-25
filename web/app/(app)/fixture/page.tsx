@@ -167,7 +167,7 @@ export default function FixturePage() {
    * Starting a match is not destructive but it is not reversible either, and the
    * demo is only worth watching if the person driving it owns something that
    * moves. Holding a card or having minted an agent both count; neither is
-   * checked on the server, which gates on the admin token instead — this is a
+   * checked on the server, which requires the operator's signature instead — this is a
    * guard against a misclick, not against an attacker.
    */
   const [hasAgent, setHasAgent] = useState<boolean | null>(null);
@@ -239,7 +239,7 @@ export default function FixturePage() {
    * cold fork that read is slow enough that treating null as "no" left Start
    * disabled for the first ten seconds of every page load — with a message
    * asserting the wallet held nothing, which nobody had established. The server
-   * gates on the admin token; this is a guard against a misclick, so when it
+   * requires the operator's signature; this is a guard against a misclick, so when it
    * cannot tell, it gets out of the way.
    */
   const simBlockedReason = !address
@@ -639,6 +639,8 @@ export default function FixturePage() {
           {SimPanel && (
             <SimPanel
               fixtureId={deployment.fixtureId}
+              agentRegistry={deployment.agentRegistry}
+              whistleHook={deployment.whistleHook}
               blockedReason={simBlockedReason}
               onStepped={refresh}
             />

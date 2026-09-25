@@ -4,6 +4,9 @@
  * The panel calls this on load. It is what makes a mid-match reload resume: the
  * clock comes back from `sessionStorage`, the match comes back from here, and
  * between them there is nothing left to remember.
+ *
+ * Not gated: it reads public chain state and signs nothing, and the panel needs
+ * it before the operator has signed in, to say which state the match is in.
  */
 
 import { NextResponse } from "next/server";
@@ -11,15 +14,12 @@ import { NextResponse } from "next/server";
 import { matchOracleAbi } from "../../../../vendor/oracle/abi";
 import { resolveFixture } from "../../../../lib/sim/deployment";
 import { EVENTS, LAST_MINUTE, describeEvent, nextEventAfter } from "../../../../lib/sim/match";
-import { checkToken, isProtected, publicClient } from "../../../../lib/sim/server";
+import { isProtected, publicClient } from "../../../../lib/sim/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  const auth = checkToken(req);
-  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
-
   let body: Record<string, unknown> = {};
   try {
     body = (await req.json()) as Record<string, unknown>;

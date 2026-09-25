@@ -13,16 +13,14 @@
 
 import { NextResponse } from "next/server";
 
-import { matchOracleAbi } from "../../../../vendor/oracle/abi";
+import { agentRegistryAbi, matchOracleAbi } from "../../../../vendor/oracle/abi";
 import { resolveFixture } from "../../../../lib/sim/deployment";
-import { checkToken, isProtected, oracleAccount, publicClient, walletFor } from "../../../../lib/sim/server";
+import { checkOperator, isProtected, oracleAccount, publicClient, walletFor } from "../../../../lib/sim/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  const auth = checkToken(req);
-  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   let body: Record<string, unknown> = {};
   try {
@@ -33,6 +31,8 @@ export async function POST(req: Request) {
 
   const D = resolveFixture(body.fixtureId);
   if (!D) return NextResponse.json({ error: `Unknown fixture ${String(body.fixtureId)}.` }, { status: 404 });
+  const auth = await checkOperator(req, D);
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   const pc = publicClient();
   let fixture: readonly unknown[];
@@ -66,6 +66,31 @@ export async function POST(req: Request) {
   if (isProtected(D.fixtureId) && body.confirm !== 1 && body.confirm !== "1") {
     return NextResponse.json(
       { error: `Fixture ${D.fixtureId} is protected. Re-send with confirm=1 if you really mean it.`, protected: true },
+      { status: 409 },
+    );
+  }
+
+  /*
+   * Refuse while the agents are bound to another fixture.
+   *
+   * AgentRegistry has one market; every fixture's deploy repoints it. Kicking
+   * off a fixture that is not the market means its first agent fill reverts
+   * `OnlyMarket` and takes the whole tick with it. The panel already disables
+   * Start; this is the same rule where it cannot be bypassed.
+   */
+  const D2 = D as typeof D & { agentRegistry: `0x${string}`; whistleHook: `0x${string}` };
+  const market = (await pc.readContract({
+    address: D2.agentRegistry, abi: agentRegistryAbi, functionName: "market",
+  })) as `0x${string}`;
+  if (market.toLowerCase() !== D2.whistleHook.toLowerCase()) {
+    return NextResponse.json(
+      {
+        error:
+          "Agents are bound to another fixture. Activate this one first — one setMarket from the " +
+          "operator wallet (the panel's Activate button, or scripts/activate-fixture.ts).",
+        market,
+        hook: D2.whistleHook,
+      },
       { status: 409 },
     );
   }
