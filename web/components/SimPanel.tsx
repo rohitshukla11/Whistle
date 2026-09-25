@@ -224,7 +224,19 @@ export function SimPanel({ fixtureId, blockedReason, onStepped }: Props) {
     }
     setBusy("start");
     const res = await call("start", view?.protected ? { confirm: 1 } : {});
-    if (res) writeClock({ running: true, speed: clockRef.current.speed, originMs: Date.now(), originMinute: 0 });
+    if (res) {
+      writeClock({ running: true, speed: clockRef.current.speed, originMs: Date.now(), originMinute: 0 });
+      /*
+       * Re-read, because `start` answers about the kickoff, not about the match.
+       *
+       * Its reply carries no `lastMinute` or event counts, and leaving it as the
+       * view left the header reading "0' of undefined'" and — worse — a stale
+       * `chainState` of 0, which disabled Skip for the rest of the match. The
+       * panel's view must always come from something that describes the whole
+       * fixture.
+       */
+      await call("status");
+    }
     setBusy(null);
     onStepped?.();
   };
