@@ -1,0 +1,23 @@
+# Solidity sources only. Everything is ignored, then our own contracts are let
+# back in — so a stray key, build artefact or vendored dependency cannot be
+# added by accident later.
+*
+!*/
+!/.gitignore
+!contracts/src/**/*.sol
+!contracts/script/**/*.sol
+!contracts/test/**/*.sol
+
+# Vendored dependencies and build output, even though the rules above exclude
+# them already. Repeated because these are the ones that cost 2,000 files.
+contracts/lib/
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+
+# Belt and braces: never, under any circumstances.
+.env
+.env.*
+.secrets/
+**/*.key
+**/*.pem
