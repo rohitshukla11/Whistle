@@ -41,14 +41,17 @@ import {
   type AgentState,
   type Playbook,
 } from "../../../components/agent-ui";
-import { FixtureSwitcher } from "../../../components/ui";
 import { Wallet } from "../../../components/Wallet";
-import { useFixture } from "../../../lib/fixtures";
+import { ALL_FIXTURES, useFixture } from "../../../lib/fixtures";
 import { short, usdc } from "../../../lib/format";
 import { scanOrders, type OrderRow } from "../../../lib/orders";
 import { EXPLORER_LIVE, txUrl } from "../../../lib/explorer";
 import { agentRegistryAbi, describe, useWhistle, whistleHookAbi } from "../../../lib/useWhistle";
 import { confirm } from "../../../vendor/oracle/tx";
+import { NewAgentForm } from "../../../components/NewAgentForm";
+import { TxRef } from "../../../components/TxRef";
+import { CapControls, STOP_NOTE } from "../../../components/CapControls";
+import { WORLD_ON } from "../../../components/WorldVerify";
 import { shortAddress, useOperatorSession } from "../../../lib/sim/useOperatorSession";
 
 const permissionedResolverAbi = parseAbi([
@@ -82,6 +85,8 @@ const seededCapOf = (D: { agentCapUSDC?: string }) =>
 
 interface AgentView {
   address: Address;
+  /** The match this mandate is scoped to. */
+  fixtureId: bigint;
   fqdn: string;
   resolver: Address;
   registry: Address;
@@ -184,12 +189,11 @@ export default function AgentsPage() {
         ),
       );
 
-      // A mandate is scoped to one fixture. Listing the previous match's agents
-      // would show them as revoked or unauthorised, which reads as a broken
-      // mandate rather than a finished one.
+      // My agents: this wallet's mandates on every fixture, each labelled with
+      // its match. With no wallet connected, the current fixture's, as before.
       const mine = addresses
         .map((agent, i) => ({ agent, info: infos[i]! }))
-        .filter(({ info }) => info[4] === fixtureId);
+        .filter(({ info }) => (address ? info[0].toLowerCase() === address.toLowerCase() : info[4] === fixtureId));
 
       const out: AgentView[] = await Promise.all(
         mine.map(async ({ agent, info }) => {
@@ -213,7 +217,7 @@ export default function AgentsPage() {
               () =>
                 publicClient.readContract({
                   address: D.agentRegistry, abi: agentRegistryAbi, functionName: "isAuthorized",
-                  args: [agent, fixtureId, players[0]?.card ?? D.usdc, 1n],
+                  args: [agent, info[4], players[0]?.card ?? D.usdc, 1n],
                 }),
               prior?.authorized ?? false,
             ),
@@ -229,6 +233,7 @@ export default function AgentsPage() {
 
           const view: AgentView = {
             address: agent,
+            fixtureId: info[4],
             fqdn,
             resolver,
             registry,
@@ -254,7 +259,7 @@ export default function AgentsPage() {
     } finally {
       setLoaded(true);
     }
-  }, [publicClient, players, D, fixtureId]);
+  }, [publicClient, players, D, fixtureId, address]);
 
   useEffect(() => {
     void load();
@@ -311,7 +316,8 @@ export default function AgentsPage() {
       // revert verbatim — the mandate is gone, and this is what that looks like
       // from the agent's side. No log can show this: a reverted `queueOrder`
       // emits nothing.
-      const reason = await probeRevert(publicClient, agent.address, players[0]?.card, D.whistleHook, fixtureId);
+      const own = ALL_FIXTURES.find((f) => f.fixtureId === String(agent.fixtureId));
+      const reason = await probeRevert(publicClient, agent.address, players[0]?.card, own?.whistleHook ?? D.whistleHook, agent.fixtureId);
       setRevertProof({ agent: agent.fqdn, reason });
       await load();
     } catch (err) {
@@ -332,10 +338,6 @@ export default function AgentsPage() {
             Each mandate is an ENS name with its own resolver. You keep the keys to what it may spend;
             it keeps the keys to what it reports.
           </p>
-        </div>
-        <div className="flex min-w-0 items-center gap-2 lg:hidden">
-          <FixtureSwitcher all={all} current={D.fixtureId} onSelect={select} />
-          <Wallet />
         </div>
       </header>
 
@@ -376,14 +378,14 @@ export default function AgentsPage() {
               Your mandates
             </h2>
             <span className="tnum text-[12px] text-dim">
-              {live} live · {agents.length} this fixture
+              {live} live · {agents.length} {address ? "across fixtures" : "this fixture"}
             </span>
           </div>
 
           {!loaded && <Card className="px-5 py-8 text-center text-[13px] text-dim">Reading the registry…</Card>}
           {loaded && agents.length === 0 && (
             <Card className="px-5 py-8 text-center text-[13px] text-dim">
-              No agents for this fixture yet. Grant one on the right.
+              No agents yet. Grant one on the right, or from a fixture before kick-off.
             </Card>
           )}
 
@@ -406,6 +408,10 @@ export default function AgentsPage() {
                           {a.fqdn}
                         </Link>
                         <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[12px] text-dim">
+                          <Link href={`/fixtures/${a.fixtureId}`} className="text-muted hover:text-text hover:underline">
+                            {ALL_FIXTURES.find((f) => f.fixtureId === String(a.fixtureId))?.label ?? `Fixture ${a.fixtureId}`}
+                          </Link>
+                          <span aria-hidden>·</span>
                           <span className="inline-flex items-center gap-1.5 capitalize">
                             <span
                               className="h-1.5 w-1.5 rounded-full"
@@ -459,7 +465,7 @@ export default function AgentsPage() {
                     <p className="flex-1 text-[12px] text-dim">
                       The name is unregistered. Its orders revert and nothing can bring it back.
                     </p>
-                  ) : state === "paused" ? (
+                  ) : WORLD_ON ? null : state === "paused" ? (
                     <Btn
                       disabled={pending !== null || !address}
                       onClick={() => setCap(a, capBeforePause.current.get(a.address) ?? seededCapOf(D), "resumed")}
@@ -491,6 +497,17 @@ export default function AgentsPage() {
                     </Btn>
                   )}
                 </div>
+
+                {WORLD_ON && state !== "revoked" && (
+                  <div className="mt-3 border-t border-line-soft pt-3">
+                    <CapControls
+                      agent={{ address: a.address, fqdn: a.fqdn, resolver: a.resolver, spendCap: /^\d+$/.test(a.spendCap) ? BigInt(a.spendCap) : 0n, state }}
+                      fixtureId={String(a.fixtureId)}
+                      agentRegistry={ALL_FIXTURES.find((f) => f.fixtureId === String(a.fixtureId))?.agentRegistry ?? D.agentRegistry}
+                      onChanged={() => void load()}
+                    />
+                  </div>
+                )}
               </Card>
             );
           })}
@@ -500,289 +517,25 @@ export default function AgentsPage() {
             and it is reversible. Revoke unregisters the name, so authorisation fails at its first check and
             any queued order cancels on the next tick. Neither asks the agent for anything — it holds no key
             that can write either record.
+            {WORLD_ON && (
+              <>
+                {" "}
+                <strong className="text-muted">{STOP_NOTE}</strong> Raising a cap or resuming does: a fresh
+                World ID proof from the human bound to the agent.
+              </>
+            )}
           </p>
         </div>
 
         {/* ------------------------------------------------- create + ledger */}
         <div className="min-w-0 flex-1 space-y-5">
-          <NewAgent onCreated={load} />
+          <NewAgentForm onCreated={load} />
           <WhatTheyDid agents={agents} />
         </div>
       </div>
     </main>
   );
 }
-
-// ------------------------------------------------------------------- create
-
-/** How long a mandate may live. Anything longer than the match is a smell. */
-const DURATIONS = [
-  { label: "2 hours", hours: 2 },
-  { label: "6 hours", hours: 6 },
-  { label: "24 hours", hours: 24 },
-] as const;
-
-function NewAgent({ onCreated }: { onCreated: () => void }) {
-  const { deployment: D, fixtureId } = useFixture();
-  const { address } = useAccount();
-  const publicClient = usePublicClient();
-  const { data: wallet } = useWalletClient();
-
-  const [playbook, setPlaybook] = useState<Playbook>("protect");
-  /**
-   * Always a managed key: the server assigns a derived agent key for this fixture
-   * and returns only its address. An external agent address is a direct
-   * `createAgent` call — see the README's Agents section — not a field here.
-   */
-  const [cap, setCap] = useState(D.agentCapUSDC ?? "2000");
-  useEffect(() => setCap(D.agentCapUSDC ?? "2000"), [D.agentCapUSDC]);
-  const op = useOperatorSession(fixtureId.toString(), D.agentRegistry);
-  const [stage, setStage] = useState<"signing" | "assigning" | "creating" | null>(null);
-  const [move, setMove] = useState("10");
-  const [hours, setHours] = useState<number>(6);
-  /**
-   * The label the registry will mint next, and whether this wallet has an
-   * account at all. `createAgent` reverts `UnknownUser()` without one, so the
-   * button has to say that rather than offer a transaction that cannot work.
-   */
-  const [next, setNext] = useState<number | null>(null);
-  const [hasAccount, setHasAccount] = useState<boolean | null>(null);
-  /** The expiry clock is a client-only value; rendering it on the server would
-   *  hydrate to a different minute. */
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<{ fqdn: string; hash: string; agent: Address } | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!publicClient || !address) {
-      setNext(null);
-      setHasAccount(null);
-      return;
-    }
-    let cancelled = false;
-    void (async () => {
-      try {
-        const account = await publicClient.readContract({
-          address: D.agentRegistry, abi: agentRegistryAbi, functionName: "userAccounts", args: [address],
-        });
-        if (cancelled) return;
-        setHasAccount(account[3]);
-        setNext(account[3] ? Number(account[2]) + 1 : null);
-      } catch {
-        if (!cancelled) {
-          setNext(null);
-          setHasAccount(null);
-        }
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [publicClient, address, D]);
-
-  const endsAt = useMemo(() => new Date(Date.now() + hours * 3_600_000), [hours]);
-
-  async function submit() {
-    if (!wallet || !publicClient || !address) return;
-    setBusy(true);
-    setError(null);
-    setResult(null);
-    try {
-      // One operator signature per session, then the server picks and funds a key.
-      let session = op.session;
-      if (!session) {
-        setStage("signing");
-        session = await op.signIn();
-        if (!session) throw new Error(op.error ?? "Sign in as the operator to get a managed agent key.");
-      }
-      setStage("assigning");
-      const res = await fetch("/api/agents/assign", {
-        method: "POST",
-        headers: { "content-type": "application/json", ...op.headersFor(session) },
-        body: JSON.stringify({ fixtureId: fixtureId.toString() }),
-      });
-      const json = (await res.json()) as { address?: Address; error?: string };
-      if (!res.ok || !json.address) {
-        if (res.status === 401 || res.status === 403) op.clear();
-        throw new Error(json.error ?? `Could not assign an agent key (HTTP ${res.status}).`);
-      }
-      const agent = json.address;
-      setStage("creating");
-      const expiry = BigInt(Math.floor(endsAt.getTime() / 1000));
-      const salt = BigInt(Math.floor(Math.random() * 1_000_000_000));
-
-      const { request } = await publicClient.simulateContract({
-        address: D.agentRegistry,
-        abi: agentRegistryAbi,
-        functionName: "createAgent",
-        args: [
-          {
-            user: address,
-            agent,
-            fixtureId,
-            templateId: BigInt(PLAYBOOK_ID[playbook]),
-            spendCapUSDC: BigInt(cap || "0") * 1_000_000n,
-            slippageBps: BigInt(Math.round(Number(move || "0") * 100)),
-            expiry,
-            salt,
-          },
-        ],
-        account: address,
-      });
-      const hash = await wallet.writeContract(request);
-      await confirm(publicClient, hash);
-
-      const info = await publicClient.readContract({
-        address: D.agentRegistry, abi: agentRegistryAbi, functionName: "agentInfo",
-        args: [agent],
-      });
-      setResult({ fqdn: info[7], hash, agent });
-      onCreated();
-    } catch (err) {
-      setError(describe(err));
-    } finally {
-      setBusy(false);
-      setStage(null);
-    }
-  }
-
-  const ready =
-    Boolean(address) && hasAccount !== false && Number(cap) > 0;
-
-  return (
-    <Card>
-      <CardHead title="New agent" hint="A name, a resolver and a spend cap, in one transaction." />
-      <div className="space-y-5 p-5">
-        <fieldset>
-          <legend className="mb-2 font-display text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
-            Playbook
-          </legend>
-          <div className="grid gap-2 sm:grid-cols-3">
-            {PLAYBOOKS.map((p) => {
-              const on = playbook === p;
-              return (
-                <label
-                  key={p}
-                  className={`cursor-pointer rounded-[14px] border p-3 transition-colors ${
-                    on ? "border-up bg-surface" : "border-line-soft hover:border-line"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="playbook"
-                    className="sr-only"
-                    checked={on}
-                    onChange={() => setPlaybook(p)}
-                  />
-                  <span className="flex items-center gap-2">
-                    <span
-                      className="h-2.5 w-2.5 rounded-full"
-                      style={{ background: PLAYBOOK_DOT[p] }}
-                      aria-hidden
-                    />
-                    <span className="font-display text-[13px] font-extrabold capitalize">{p}</span>
-                  </span>
-                  <span className="mt-1.5 block text-[12px] leading-snug text-dim">{PLAYBOOK_RULE[p]}</span>
-                </label>
-              );
-            })}
-          </div>
-          <p className="mt-2 max-w-[68ch] text-[12px] leading-relaxed text-dim">
-            {PLAYBOOK_BLURB[playbook]}
-          </p>
-        </fieldset>
-
-        <p className="text-[12px] leading-relaxed text-dim">
-          Whistle assigns this agent a key it manages for this fixture, funds its gas and runs it. The key
-          never leaves the server.
-        </p>
-
-        <div className="grid gap-3 sm:grid-cols-3">
-          <label className="block">
-            <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
-              Spend cap
-            </span>
-            <div className="flex items-center gap-2">
-              <input className={INPUT} inputMode="numeric" value={cap} onChange={(e) => setCap(e.target.value)} />
-              <span className="shrink-0 text-[12px] text-dim">USDC</span>
-            </div>
-          </label>
-
-          <label className="block">
-            <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
-              Max price move
-            </span>
-            <div className="flex items-center gap-2">
-              <input className={INPUT} inputMode="decimal" value={move} onChange={(e) => setMove(e.target.value)} />
-              <span className="shrink-0 text-[12px] text-dim">%</span>
-            </div>
-          </label>
-
-          <label className="block">
-            <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
-              Authority ends
-            </span>
-            <select className={INPUT} value={hours} onChange={(e) => setHours(Number(e.target.value))}>
-              {DURATIONS.map((d) => (
-                <option key={d.hours} value={d.hours}>
-                  {d.label}
-                </option>
-              ))}
-            </select>
-            <span className="mt-1.5 block text-[12px] text-dim">
-              {mounted ? endsAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "\u00a0"}
-            </span>
-          </label>
-        </div>
-
-        <Btn tone="cta" className="w-full py-3 text-[13px]" disabled={!ready || busy} onClick={submit}>
-          {busy
-            ? stage === "signing"
-              ? "Sign in with your wallet…"
-              : stage === "assigning"
-                ? "Preparing the agent key…"
-                : "Creating…"
-            : !address
-              ? "Connect a wallet"
-              : hasAccount === false
-                ? "This wallet has no Whistle name"
-                : `Create agent-${next ?? ""}`}
-        </Btn>
-
-        {hasAccount === false && (
-          <Note>
-            <code className="text-muted">createAgent</code> mints a subname of your own name, and this
-            wallet does not have one yet. <code className="text-muted">registerUser</code> creates it —
-            the deploy script does that for the demo accounts.
-          </Note>
-        )}
-
-        {error && <Note kind="error">{error}</Note>}
-        {result && (
-          <Note kind="ok">
-            Created <strong>{result.fqdn}</strong> with its own resolver
-            , on the Whistle-managed key <code className="text-muted">{result.agent}</code>.{" "}
-            <TxRef hash={result.hash} />
-          </Note>
-        )}
-        <p className="max-w-[68ch] text-[12px] leading-relaxed text-dim">
-          Creating the name also splits the write rights on its resolver: the agent gets{" "}
-          <code className="text-muted">status</code>, <code className="text-muted">last-action</code> and{" "}
-          <code className="text-muted">pnl-live</code>; you keep{" "}
-          <code className="text-muted">spend-cap</code>, <code className="text-muted">slippage</code> and{" "}
-          <code className="text-muted">strategy</code>. Whistle drops its own write role in the same
-          transaction.
-        </p>
-      </div>
-    </Card>
-  );
-}
-
-const INPUT =
-  "tnum w-full min-w-0 rounded-[10px] border border-line bg-surface px-3 py-2 text-[14px] text-text " +
-  "outline-none transition-colors focus:border-up";
 
 // -------------------------------------------------------------- what they did
 
@@ -918,20 +671,6 @@ function fmt(units: bigint | undefined): string {
   const whole = units / 10n ** 18n;
   const frac = ((units % 10n ** 18n) * 100n) / 10n ** 18n;
   return `${whole}.${frac.toString().padStart(2, "0")}`;
-}
-
-function TxRef({ hash }: { hash: string }) {
-  if (!EXPLORER_LIVE) return <code className="tnum break-all text-[11px] text-dim">{hash}</code>;
-  return (
-    <a
-      href={txUrl(hash)}
-      target="_blank"
-      rel="noreferrer"
-      className="tnum break-all text-[11px] underline underline-offset-2"
-    >
-      {short(hash)}
-    </a>
-  );
 }
 
 async function probeRevert(
