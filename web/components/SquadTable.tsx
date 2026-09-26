@@ -44,10 +44,12 @@ interface Props {
   settled: boolean;
   selected: number | null;
   onSelect: (id: number, action: RowAction) => void;
+  /** Before kick-off every card is a pre-match mint at the fixed price, pooled or not. */
+  preMatch?: boolean;
 }
 
 export function SquadTable({
-  players, teamNames, teamColours, held, settled, selected, onSelect,
+  players, teamNames, teamColours, held, settled, selected, onSelect, preMatch = false,
 }: Props) {
   const [team, setTeam] = useState<"both" | 0 | 1>("both");
   const [query, setQuery] = useState("");
@@ -81,7 +83,7 @@ export function SquadTable({
 
   const actionFor = (p: PlayerRow): RowAction => {
     if (settled) return "settled";
-    if (!p.pooled) return "mint";
+    if (preMatch || !p.pooled) return "mint";
     return held.has(p.id) ? "sell" : "buy";
   };
 
@@ -101,7 +103,7 @@ export function SquadTable({
   return (
     <div className="flex h-full min-h-0 flex-col gap-3">
       <div className="flex gap-2">
-        <label className="flex h-11 flex-1 items-center gap-2 rounded-[22px] border border-line bg-surface px-3">
+        <label className="flex h-11 flex-1 items-center gap-2 rounded-[22px] border border-line bg-surface px-3 focus-within:border-up">
           <svg viewBox="0 0 16 16" className="h-4 w-4 shrink-0" aria-hidden focusable="false">
             <path d="M4 2h8l-1 4v7l-2-1-2 1V6z" fill="none" stroke="#8C8C95" strokeWidth="1.3" strokeLinejoin="round" />
           </svg>
@@ -116,7 +118,7 @@ export function SquadTable({
             <option value="1">{teamNames[1]}</option>
           </select>
         </label>
-        <label className="flex h-11 flex-1 items-center gap-2 rounded-[22px] border border-line bg-surface px-3">
+        <label className="flex h-11 flex-1 items-center gap-2 rounded-[22px] border border-line bg-surface px-3 focus-within:border-up">
           <svg viewBox="0 0 16 16" className="h-4 w-4 shrink-0" aria-hidden focusable="false">
             <circle cx="7" cy="7" r="4.5" fill="none" stroke="#8C8C95" strokeWidth="1.3" />
             <path d="M10.5 10.5 14 14" stroke="#8C8C95" strokeWidth="1.3" strokeLinecap="round" />
@@ -241,14 +243,16 @@ export function SquadTable({
       </ul>
 
       <p className="flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-dim">
-        {([["on", "on pitch"], ["bench", "bench"], ["frozen", "frozen · sent off or subbed"], ["held", "you hold"]] as const).map(
-          ([k, label]) => (
-            <span key={k} className="flex items-center gap-1.5">
-              <span className={`h-2.5 w-2.5 rounded-full ${DOT[k]}`} aria-hidden />
-              {label}
-            </span>
-          ),
-        )}
+        {(preMatch
+          ? ([["on", "starting"], ["bench", "bench"], ["held", "you hold"]] as const)
+          : ([["on", "on pitch"], ["bench", "bench"], ["frozen", "frozen · sent off or subbed"], ["held", "you hold"]] as const)
+        ).map(([k, label]) => (
+          <span key={k} className="flex items-center gap-1.5">
+            <span className={`h-2.5 w-2.5 rounded-full ${DOT[k]}`} aria-hidden />
+            {label}
+          </span>
+        ))}
+        {preMatch && <span className="text-muted">Pre-match: mint at the fixed price, no delay.</span>}
       </p>
     </div>
   );

@@ -44,7 +44,7 @@ import {
 import { Wallet } from "../../../../components/Wallet";
 import { UNIVERSAL_RESOLVER } from "../../../../lib/config";
 import { EXPLORER_LIVE, addressUrl, txUrl } from "../../../../lib/explorer";
-import { FIXTURES, useFixture } from "../../../../lib/fixtures";
+import { ALL_FIXTURES, useFixture } from "../../../../lib/fixtures";
 import { short, usdc } from "../../../../lib/format";
 import { scanAddressLogs } from "../../../../lib/logs";
 import { scanOrders, type OrderRow } from "../../../../lib/orders";
@@ -379,6 +379,30 @@ export default function AgentProfilePage() {
     return () => clearInterval(t);
   }, [readRecords]);
 
+  /**
+   * `human.agent-N` on the user's own name — keccak256(iss ‖ sub) of the World ID
+   * that created or last approved this agent, written by Whistle after a verified
+   * proof. It lives on the user name's resolver because the agent's resolver has
+   * no platform role for new keys.
+   */
+  const [human, setHuman] = useState<string>("");
+  useEffect(() => {
+    if (!publicClient || !agent) return;
+    let cancelled = false;
+    const [label, ...rest] = agent.fqdn.split(".");
+    const user = rest.join(".");
+    void publicClient
+      .readContract({
+        address: UNIVERSAL_RESOLVER, abi: universalResolverAbi, functionName: "resolve",
+        args: [dnsEncode(user), encodeFunctionData({ abi: textAbi, functionName: "text", args: [`0x${"0".repeat(64)}` as `0x${string}`, `human.${label}`] })],
+      })
+      .then((r) => !cancelled && setHuman(decodeString(r[0])))
+      .catch(() => !cancelled && setHuman(""));
+    return () => {
+      cancelled = true;
+    };
+  }, [publicClient, agent]);
+
   // --------------------------------------------- who actually wrote each one
 
   useEffect(() => {
@@ -580,6 +604,15 @@ export default function AgentProfilePage() {
                 {agent.fqdn}
               </h1>
               <StateBadge state={state} />
+              {/^0x[0-9a-f]{64}$/i.test(human) && (
+                <span
+                  className="rounded-full border border-up/50 px-2.5 py-0.5 text-[11px] font-bold text-up"
+                  title={`human.${agent.fqdn.split(".")[0]} = ${human} (keccak256 of the World ID issuer and subject), written by Whistle`}
+                  data-testid="human-badge"
+                >
+                  human-backed · World ID
+                </span>
+              )}
               {authorized !== null && state !== "revoked" && (
                 <span className={`text-[12px] ${authorized ? "text-up" : "text-dim"}`}>
                   {authorized ? "authorised right now" : "not authorised"}
@@ -1006,7 +1039,7 @@ function gloss(key: string, value: string): string | null {
     return Number.isFinite(n) ? `${(n / 100).toFixed(1)}% of the reference price` : null;
   }
   if (key === "fixture") {
-    return FIXTURES.find((f) => f.fixtureId === value)?.label ?? null;
+    return ALL_FIXTURES.find((f) => f.fixtureId === value)?.label ?? null;
   }
   if (key === "revoked-at") {
     const n = Number(value);

@@ -149,4 +149,3 @@ export function TxLink({ hash }: { hash: string }) {
 }
 
 // Reads each fixture's live state, so it is a client component of its own.
-export { FixtureSwitcher } from "./FixtureSwitcher";

@@ -245,7 +245,7 @@ export default function LandingPage() {
               <li><a href="#agents" className="transition-colors hover:text-text">Agents</a></li>
               <li><a href="#board" className="transition-colors hover:text-text">Live board</a></li>
             </ul>
-            <GradientLink href="/fixture">Launch app</GradientLink>
+            <GradientLink href="/fixtures">Launch app</GradientLink>
           </nav>
         </header>
 
@@ -318,7 +318,7 @@ export default function LandingPage() {
             {/* Just the button. The panel that used to hold it repeated a card
                 already on screen and a caption the sections below make properly. */}
             <div className="relative z-10 mt-9 flex justify-center">
-              <GradientLink href="/fixture">Launch app</GradientLink>
+              <GradientLink href="/fixtures">Launch app</GradientLink>
             </div>
 
             {/*
@@ -434,7 +434,7 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="mt-8">
-                <OutlineLink href="/fixture">Open the live board</OutlineLink>
+                <OutlineLink href="/fixtures">Open the live board</OutlineLink>
               </div>
             </div>
 
@@ -452,7 +452,7 @@ export default function LandingPage() {
                 <div className="relative rounded-[18px] border border-line-soft bg-surface px-6 py-10 text-center">
                   <p className="text-[15px] text-muted">Live board unavailable.</p>
                   <div className="mt-5 flex justify-center">
-                    <GradientLink href="/fixture">Launch app</GradientLink>
+                    <GradientLink href="/fixtures">Launch app</GradientLink>
                   </div>
                 </div>
               ) : (

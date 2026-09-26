@@ -21,6 +21,8 @@ const REGISTERED = 2;
 export interface MyAgent {
   address: Address;
   fqdn: string;
+  /** The agent's own resolver, where `spend-cap` lives. */
+  resolver: Address;
   fixtureId: bigint;
   playbook: Playbook;
   spentUSDC: bigint;
@@ -72,6 +74,7 @@ export function useMyAgents(registry: Address, refreshMs = 6_000) {
           return {
             address: a,
             fqdn: info[7],
+            resolver: info[2],
             fixtureId: info[4],
             playbook: playbookOf(info[5]),
             spentUSDC: info[6],
