@@ -1,0 +1,20 @@
+# Native build scripts this project allows.
+#
+# pnpm 10+ refuses to run a dependency's install script unless it is listed
+# here, and `pnpm build` then fails outright with ERR_PNPM_IGNORED_BUILDS — so a
+# missing entry is not a warning, it is a broken build on a fresh machine.
+#
+# esbuild        links its platform binary; `tsx` cannot run without it.
+# keccak         native hashing used by the Ethereum stack, with a JS fallback.
+# bufferutil
+# utf-8-validate optional `ws` accelerators, pulled in by the wallet connectors.
+# Just this directory. The repo is not a monorepo: `web/` installs on its own
+# (see web/pnpm-workspace.yaml) so it can be uploaded to a host by itself.
+packages:
+  - "."
+
+allowBuilds:
+  esbuild: true
+  keccak: true
+  bufferutil: true
+  utf-8-validate: true
