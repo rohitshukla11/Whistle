@@ -1,0 +1,78 @@
+{
+  "fillRouter": "0x1cc6df3101d97f6eb61b5fb6efe1c89dba414140",
+  "fixtureId": "2026092704",
+  "matchOracle": "0x90392a3ab5c5A4176d1b8d68835D6D26FBe2D588",
+  "mmVault": "0xdca76e521f9930e96dbad4be929b23b8f484e521",
+  "settlementPot": "0x2B24f00FF4A2f0E089E5428b602A0d1D0A0E4F81",
+  "whistleHook": "0x1d3b9458e97827fa32225de2534a4f8669374088",
+  "chainId": 11155111,
+  "agentRegistry": "0x0fD44F0e192f0091439554A5Ed8195F5F0672F3D",
+  "rootRegistry": "0xCeBF767D99e04A3f8934B29331b5165B0C1Cab3C",
+  "ensRoleAuth": "0x938948Aa85D5582d6286fcE21290d4aDAF08CF64",
+  "fixtureFactory": "0x8CaE45F405739bf362D7c66f538fCeF59dA32c8C",
+  "usdc": "0x7f46405B3757523c3B30C0bb06585bBa16619490",
+  "deployBlock": 11786940,
+  "label": "Demo 4",
+  "settled": false,
+  "order": 4,
+  "agentCapUSDC": "500",
+  "tradedPlayerIds": [
+    0,
+    2,
+    4,
+    5,
+    9,
+    10,
+    18,
+    19,
+    21,
+    25,
+    26
+  ],
+  "pooledCards": {
+    "0": {
+      "name": "Petr Cech",
+      "card": "0x10a8663c623425D25dB13d7f4843c46cBa37d1A7"
+    },
+    "2": {
+      "name": "John Terry",
+      "card": "0xF15DeA86E201c2D6a48E71C419F8A1Ef4F72e528"
+    },
+    "4": {
+      "name": "Ashley Cole",
+      "card": "0x91b7502F164BBa218aC64c34E9bDfDb4567625aB"
+    },
+    "5": {
+      "name": "Michael Essien",
+      "card": "0xCef6e2E04235f9BeF7F6c672c6f7F037e6dDf644"
+    },
+    "9": {
+      "name": "Florent Malouda",
+      "card": "0xeFC2b23F3514231509aa778F5F6CEf5f973E5e17"
+    },
+    "10": {
+      "name": "Didier Drogba",
+      "card": "0x8b0247D65F4C2517cDb60E80CD6E9cF2353Ee271"
+    },
+    "18": {
+      "name": "Victor Valdes",
+      "card": "0x710Bd444DcF431BA50729Dd1EE4290ff66E37DAD"
+    },
+    "19": {
+      "name": "Carles Puyol",
+      "card": "0x7F313Eca025513fa26B559D92D8E58B326a72f20"
+    },
+    "21": {
+      "name": "Eric Abidal",
+      "card": "0xc0D912a5aEa5434C453FdEFEcfcC1B2F6209829E"
+    },
+    "25": {
+      "name": "Andres Iniesta",
+      "card": "0x7cA1E36C2e4fD0c149638D0150767F3001A5464d"
+    },
+    "26": {
+      "name": "Lionel Messi",
+      "card": "0x11f0eF42e8F6D58A9Ddf239C6044cbE8BaB34Abc"
+    }
+  }
+}
