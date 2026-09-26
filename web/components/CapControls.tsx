@@ -18,7 +18,7 @@ import { describe } from "../lib/useWhistle";
 import { confirm } from "../vendor/oracle/tx";
 import { Btn } from "./agent-ui";
 import { TxRef } from "./TxRef";
-import { WorldVerify } from "./WorldVerify";
+import { WorldVerify, type Phase } from "./WorldVerify";
 
 const setTextAbi = parseAbi(["function setText(bytes name, string key, string value)"]);
 
@@ -48,12 +48,29 @@ export function CapControls({
   useEffect(() => setValue(String(currentUSDC || "")), [currentUSDC]);
   const [busy, setBusy] = useState<"lower" | "pause" | null>(null);
   const [note, setNote] = useState<{ kind: "ok" | "error"; text: string; hash?: string } | null>(null);
+  /**
+   * The verification in flight, frozen. The server writes the cap before it
+   * records the result, so the next poll can show the new cap (or an agent no
+   * longer paused) first — which would unmount the button that is waiting to
+   * hear the outcome. While locked, that one stays put.
+   */
+  const [locked, setLocked] = useState<{ payload: Record<string, unknown>; label: string; resume: boolean } | null>(null);
+  const [phase, setPhase] = useState<Phase>("idle");
 
   if (agent.state === "revoked") return null;
   const n = Number(value);
   const valid = Number.isFinite(n) && n > 0;
   const raising = valid && n > currentUSDC;
   const lowering = valid && n < currentUSDC;
+  const paused = agent.state === "paused" && !(locked && !locked.resume);
+  // One verification control, in one place, whatever the row shows around it.
+  const verify = locked
+    ?? (agent.state === "paused"
+      ? { payload: { agent: agent.address }, label: "Resume · verify with World ID", resume: true }
+      : raising
+        ? { payload: { agent: agent.address, capUSDC: n }, label: `Raise cap to ${n.toLocaleString("en-US")} · verify with World ID`, resume: false }
+        : null);
+  const showInput = agent.state !== "paused" && !locked;
 
   async function write(cap: string, what: "lower" | "pause") {
     if (!wallet || !publicClient || !address) return;
@@ -80,50 +97,55 @@ export function CapControls({
 
   return (
     <div className="space-y-2" data-testid="cap-controls" data-agent={agent.fqdn}>
-      {agent.state === "paused" ? (
-        <WorldVerify
-          inline
-          action="raise-cap"
-          fixtureId={fixtureId}
-          agentRegistry={agentRegistry}
-          payload={{ agent: agent.address }}
-          label="Resume · verify with World ID"
-          disabled={!address}
-          onApproved={(d) => {
-            setNote({ kind: "ok", text: `Resumed at ${Number(d.capTo ?? 0) / 1e6} USDC after a World ID check.`, ...(d.hash ? { hash: String(d.hash) } : {}) });
-            onChanged();
-          }}
-        />
-      ) : (
-        <div className={`flex flex-wrap items-end gap-2 ${compact ? "" : "max-w-[520px]"}`}>
-          <label className="block w-[120px]">
+      <div className={`flex flex-wrap items-end gap-2 ${compact ? "" : "max-w-[560px]"}`}>
+        {showInput && (
+          <label key="cap" className="block w-[120px]">
             <span className={LABEL}>Cap · USDC</span>
             <input className={INPUT} inputMode="decimal" value={value} onChange={(e) => setValue(e.target.value)} aria-label={`New spend cap for ${agent.fqdn}`} />
           </label>
-          {raising ? (
-            <WorldVerify
-              inline
-              className="min-w-[200px] flex-1"
-              action="raise-cap"
-              fixtureId={fixtureId}
-              agentRegistry={agentRegistry}
-              payload={{ agent: agent.address, capUSDC: n }}
-              label={`Raise cap to ${n.toLocaleString("en-US")} · verify with World ID`}
-              disabled={!address}
-              onApproved={(d) => {
-                setNote({ kind: "ok", text: `Cap raised ${Number(d.capFrom ?? 0) / 1e6} → ${Number(d.capTo ?? 0) / 1e6} USDC after a World ID check.`, ...(d.hash ? { hash: String(d.hash) } : {}) });
-                onChanged();
-              }}
-            />
-          ) : (
-            <Btn disabled={!lowering || busy !== null || !address} onClick={() => void write(BigInt(Math.round(n * 1e6)).toString(), "lower")}>
-              {busy === "lower" ? "Lowering…" : "Lower cap"}
-            </Btn>
-          )}
-          <Btn disabled={busy !== null || !address} onClick={() => void write("0", "pause")}>
+        )}
+        {verify ? (
+          <WorldVerify
+            key="verify"
+            inline
+            className={paused ? "" : "min-w-[200px] flex-1"}
+            action="raise-cap"
+            fixtureId={fixtureId}
+            agentRegistry={agentRegistry}
+            payload={verify.payload}
+            label={verify.label}
+            disabled={!address}
+            onPhase={(p) => {
+              setPhase(p);
+              if (p === "starting") setLocked(verify);
+            }}
+            onApproved={(d) => {
+              setNote({
+                kind: "ok",
+                text: d.resumed
+                  ? `Resumed at ${Number(d.capTo ?? 0) / 1e6} USDC after a World ID check.`
+                  : `Cap raised ${Number(d.capFrom ?? 0) / 1e6} → ${Number(d.capTo ?? 0) / 1e6} USDC after a World ID check.`,
+                ...(d.hash ? { hash: String(d.hash) } : {}),
+              });
+              setLocked(null);
+              onChanged();
+            }}
+          />
+        ) : (
+          <Btn key="lower" disabled={!lowering || busy !== null || !address} onClick={() => void write(BigInt(Math.round(n * 1e6)).toString(), "lower")}>
+            {busy === "lower" ? "Lowering…" : "Lower cap"}
+          </Btn>
+        )}
+        {!paused && (
+          <Btn key="pause" disabled={busy !== null || !address} onClick={() => void write("0", "pause")}>
             {busy === "pause" ? "Pausing…" : "Pause"}
           </Btn>
-        </div>
+        )}
+      </div>
+      {locked && !locked.resume && phase !== "starting" && phase !== "pending" && (
+        <button type="button" className="text-[12px] text-muted underline underline-offset-2" onClick={() => setLocked(null)}>
+          Change the amount
+        </button>
       )}
       <p className="text-[11px] text-dim">
         Raising the cap or resuming needs a fresh World ID proof. {STOP_NOTE}

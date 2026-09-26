@@ -42,6 +42,8 @@ import {
   type Writer,
 } from "../../../../components/agent-ui";
 import { Wallet } from "../../../../components/Wallet";
+import { CapControls } from "../../../../components/CapControls";
+import { WORLD_ON } from "../../../../components/WorldVerify";
 import { UNIVERSAL_RESOLVER } from "../../../../lib/config";
 import { EXPLORER_LIVE, addressUrl, txUrl } from "../../../../lib/explorer";
 import { ALL_FIXTURES, useFixture } from "../../../../lib/fixtures";
@@ -661,7 +663,8 @@ export default function AgentProfilePage() {
           </div>
 
           <div className="flex shrink-0 flex-wrap gap-2 sm:flex-col">
-            {state !== "revoked" &&
+            {/* With World ID on, Pause and Resume (a cap raise) live in the cap controls below. */}
+            {state !== "revoked" && !WORLD_ON &&
               (state === "paused" ? (
                 <Btn disabled={busy !== null || !address} onClick={() => setCap(capBeforePause ?? SEEDED_CAP, "Resumed")}>
                   {busy === "resume" ? "Resuming…" : "Resume"}
@@ -685,6 +688,17 @@ export default function AgentProfilePage() {
             )}
           </div>
         </div>
+
+        {WORLD_ON && state !== "revoked" && (
+          <div className="mt-4 border-t border-line-soft pt-4">
+            <CapControls
+              agent={{ address: agent.address, fqdn: agent.fqdn, resolver: agent.resolver, spendCap: cap, state }}
+              fixtureId={String(agent.fixtureId)}
+              agentRegistry={ALL_FIXTURES.find((f) => f.fixtureId === String(agent.fixtureId))?.agentRegistry ?? D.agentRegistry}
+              onChanged={() => void readRecords()}
+            />
+          </div>
+        )}
 
         {notice && (
           <div className="mt-4">

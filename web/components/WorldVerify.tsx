@@ -19,7 +19,7 @@ import { Btn } from "./agent-ui";
 
 export const WORLD_ON = process.env.NEXT_PUBLIC_WORLD_IDP === "on";
 
-type Phase = "idle" | "starting" | "pending" | "approved" | "denied" | "failed";
+export type Phase = "idle" | "starting" | "pending" | "approved" | "denied" | "failed";
 
 const REASON: Record<string, string> = {
   access_denied: "Denied on the World ID page — nothing was changed.",
@@ -36,6 +36,7 @@ export function WorldVerify({
   label = "Verify with World ID",
   disabled,
   onApproved,
+  onPhase,
   inline = false,
   className = "",
 }: {
@@ -46,6 +47,8 @@ export function WorldVerify({
   label?: string;
   disabled?: boolean;
   onApproved?: (detail: Record<string, unknown>) => void;
+  /** Every phase change, so a parent can keep this mounted while it is in flight. */
+  onPhase?: (phase: Phase) => void;
   /** A row button (Resume, Approve) rather than the form's full-width CTA. */
   inline?: boolean;
   className?: string;
@@ -59,6 +62,9 @@ export function WorldVerify({
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
   const onApprovedRef = useRef(onApproved);
   onApprovedRef.current = onApproved;
+  const onPhaseRef = useRef(onPhase);
+  onPhaseRef.current = onPhase;
+  useEffect(() => onPhaseRef.current?.(phase), [phase]);
 
   const start = useCallback(async () => {
     setReason(null);

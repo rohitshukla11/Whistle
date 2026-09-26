@@ -58,6 +58,8 @@ export function NewAgentForm({ onCreated, compact = false }: { onCreated: () => 
    */
   const [next, setNext] = useState<number | null>(null);
   const [hasAccount, setHasAccount] = useState<boolean | null>(null);
+  /** Bumped when an agent is created elsewhere (the server, after World ID), so `next` moves on. */
+  const [created, setCreated] = useState(0);
   /** The expiry clock is a client-only value; rendering it on the server would
    *  hydrate to a different minute. */
   const [mounted, setMounted] = useState(false);
@@ -91,7 +93,7 @@ export function NewAgentForm({ onCreated, compact = false }: { onCreated: () => 
     return () => {
       cancelled = true;
     };
-  }, [publicClient, address, D]);
+  }, [publicClient, address, D, created]);
 
   /*
    * The displayed end time ticks with the clock; the one sent is computed when
@@ -290,6 +292,7 @@ export function NewAgentForm({ onCreated, compact = false }: { onCreated: () => 
               }}
               onApproved={(d) => {
                 setResult({ fqdn: String(d.fqdn ?? ""), hash: String(d.createHash ?? ""), agent: d.agent as Address });
+                setCreated((n) => n + 1);
                 onCreated();
               }}
             />
