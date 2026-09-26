@@ -25,8 +25,6 @@ const setTextAbi = parseAbi(["function setText(bytes name, string key, string va
 const dnsEncode = (name: string): `0x${string}` =>
   toHex(new Uint8Array(name.split(".").flatMap((l) => [l.length, ...new TextEncoder().encode(l)]).concat([0])));
 
-export const STOP_NOTE = "Stopping or limiting an agent never needs verification.";
-
 export function CapControls({
   agent,
   fixtureId,
@@ -147,9 +145,6 @@ export function CapControls({
           Change the amount
         </button>
       )}
-      <p className="text-[11px] text-dim">
-        Raising the cap or resuming needs a fresh World ID proof. {STOP_NOTE}
-      </p>
       {note && (
         <p className={`text-[12px] ${note.kind === "ok" ? "text-up" : "text-down"}`} role={note.kind === "ok" ? "status" : "alert"}>
           {note.text} {note.hash && <TxRef hash={note.hash} />}

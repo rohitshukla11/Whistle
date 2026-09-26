@@ -223,11 +223,6 @@ export function NewAgentForm({ onCreated, compact = false }: { onCreated: () => 
           </p>
         </fieldset>
 
-        <p className="text-[12px] leading-relaxed text-dim">
-          Whistle assigns this agent a key it manages for this fixture, funds its gas and runs it. The key
-          never leaves the server.
-        </p>
-
         <div className={compact ? "grid grid-cols-2 gap-3" : "grid gap-3 sm:grid-cols-3"}>
           <label className="block">
             <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
@@ -296,10 +291,6 @@ export function NewAgentForm({ onCreated, compact = false }: { onCreated: () => 
                 onCreated();
               }}
             />
-            <p className="text-[12px] leading-relaxed text-dim">
-              A fresh World ID proof is required to create an agent. Whistle creates it on the server only
-              after the proof checks out, and records that it is human-backed.
-            </p>
           </>
         ) : (
         <Btn tone="cta" className="w-full py-3 text-[13px]" disabled={!ready || busy} onClick={submit}>
@@ -334,14 +325,6 @@ export function NewAgentForm({ onCreated, compact = false }: { onCreated: () => 
             {WORLD_ON && <> · human-backed · World ID</>}
           </Note>
         )}
-        <p className={compact ? "hidden" : "max-w-[68ch] text-[12px] leading-relaxed text-dim"}>
-          Creating the name also splits the write rights on its resolver: the agent gets{" "}
-          <code className="text-muted">status</code>, <code className="text-muted">last-action</code> and{" "}
-          <code className="text-muted">pnl-live</code>; you keep{" "}
-          <code className="text-muted">spend-cap</code>, <code className="text-muted">slippage</code> and{" "}
-          <code className="text-muted">strategy</code>. Whistle drops its own write role in the same
-          transaction.
-        </p>
       </div>
     </Card>
   );

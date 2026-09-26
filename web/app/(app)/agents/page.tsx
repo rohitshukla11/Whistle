@@ -50,7 +50,7 @@ import { agentRegistryAbi, describe, useWhistle, whistleHookAbi } from "../../..
 import { confirm } from "../../../vendor/oracle/tx";
 import { NewAgentForm } from "../../../components/NewAgentForm";
 import { TxRef } from "../../../components/TxRef";
-import { CapControls, STOP_NOTE } from "../../../components/CapControls";
+import { CapControls } from "../../../components/CapControls";
 import { WORLD_ON } from "../../../components/WorldVerify";
 import { shortAddress, useOperatorSession } from "../../../lib/sim/useOperatorSession";
 
@@ -334,10 +334,6 @@ export default function AgentsPage() {
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="font-display text-[26px] font-extrabold tracking-tight">Agents</h1>
-          <p className="mt-0.5 max-w-[68ch] text-[13px] text-dim">
-            Each mandate is an ENS name with its own resolver. You keep the keys to what it may spend;
-            it keeps the keys to what it reports.
-          </p>
         </div>
       </header>
 
@@ -517,13 +513,6 @@ export default function AgentsPage() {
             and it is reversible. Revoke unregisters the name, so authorisation fails at its first check and
             any queued order cancels on the next tick. Neither asks the agent for anything — it holds no key
             that can write either record.
-            {WORLD_ON && (
-              <>
-                {" "}
-                <strong className="text-muted">{STOP_NOTE}</strong> Raising a cap or resuming does: a fresh
-                World ID proof from the human bound to the agent.
-              </>
-            )}
           </p>
         </div>
 

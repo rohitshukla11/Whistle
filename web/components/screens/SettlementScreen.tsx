@@ -252,10 +252,6 @@ export default function SettlementPage() {
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="font-display text-[26px] font-extrabold tracking-tight">Settlement</h1>
-          <p className="mt-0.5 max-w-[68ch] text-[13px] text-dim">
-            The pot was fixed at full time and split by final score. Every card redeems at the same rate for
-            everyone holding it.
-          </p>
         </div>
       </header>
 

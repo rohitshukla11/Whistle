@@ -19,7 +19,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useAccount, usePublicClient } from "wagmi";
 
-import { STOP_NOTE } from "../CapControls";
 import { WORLD_ON } from "../WorldVerify";
 import { AgentRow } from "./PreMatchScreen";
 import { CompactPlayerCard, type CardState, type Tint } from "../PlayerCard";
@@ -701,7 +700,6 @@ function LiveAgents() {
           <AgentRow key={a.address} a={a} onRevoked={() => void refresh()} />
         ))}
       </ul>
-      <p className="mt-2 text-[11px] text-dim">{STOP_NOTE}</p>
     </section>
   );
 }
