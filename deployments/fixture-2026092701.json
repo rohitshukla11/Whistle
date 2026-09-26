@@ -1,0 +1,53 @@
+{
+  "fillRouter": "0x0368256F159Df7CC5E15D832F09bD1DFD189319F",
+  "fixtureId": "2026092701",
+  "matchOracle": "0x90392a3ab5c5A4176d1b8d68835D6D26FBe2D588",
+  "mmVault": "0x1773Bf783Ba53dC84aD9241286105A2472D30EB9",
+  "settlementPot": "0xe8C9B47388affD069110003Ada40835d32CD692C",
+  "whistleHook": "0x4b7373E4512C45Dff92b1c4a6048Cd3240218088",
+  "chainId": 11155111,
+  "agentRegistry": "0x0fD44F0e192f0091439554A5Ed8195F5F0672F3D",
+  "rootRegistry": "0xCeBF767D99e04A3f8934B29331b5165B0C1Cab3C",
+  "ensRoleAuth": "0x938948Aa85D5582d6286fcE21290d4aDAF08CF64",
+  "fixtureFactory": "0x8CaE45F405739bf362D7c66f538fCeF59dA32c8C",
+  "usdc": "0x7f46405B3757523c3B30C0bb06585bBa16619490",
+  "deployBlock": 11781411,
+  "label": "Demo 1",
+  "settled": false,
+  "order": 1,
+  "agentCapUSDC": "500",
+  "tradedPlayerIds": [
+    0,
+    5,
+    9,
+    18,
+    21,
+    26
+  ],
+  "pooledCards": {
+    "0": {
+      "name": "Petr Cech",
+      "card": "0xFE6f07d9a82d11068BDDaCAA9B5D56B76c3B7dFE"
+    },
+    "5": {
+      "name": "Michael Essien",
+      "card": "0xdbdA1A465A91cCECee3eb1f8572dD7f6790d7087"
+    },
+    "9": {
+      "name": "Florent Malouda",
+      "card": "0x30E0BDdd073aDA924a69d0248A3B4859752e87d6"
+    },
+    "18": {
+      "name": "Victor Valdes",
+      "card": "0xE430dbC10a9474AC27908c3283b750B1215C51bc"
+    },
+    "21": {
+      "name": "Eric Abidal",
+      "card": "0xC4cCCD829DaB6BAC12c2136479607c9519Ff9E98"
+    },
+    "26": {
+      "name": "Lionel Messi",
+      "card": "0x6feb4b89Bc7977146B41FDA9a2444f377790cACB"
+    }
+  }
+}

@@ -1,0 +1,585 @@
+{
+  "schema": "whistle.fixture/1",
+  "fixtureId": 20090506,
+  "metadata": {
+    "competition": "UEFA Champions League",
+    "round": "Semi-final, second leg",
+    "date": "2009-05-06",
+    "venue": "Stamford Bridge, London",
+    "homeTeam": "Chelsea",
+    "awayTeam": "Barcelona",
+    "finalScore": "1-1",
+    "outcome": "1-1 on aggregate; Barcelona advance on away goals"
+  },
+  "provenance": {
+    "verified": [
+      "competition",
+      "round",
+      "date",
+      "venue",
+      "teams",
+      "finalScore",
+      "goalscorers",
+      "redCard"
+    ],
+    "reconstructed": [
+      "startingLineups",
+      "benchNames",
+      "substitutionMinutesAndPlayers",
+      "heartbeatCadence",
+      "expectedEventPoints",
+      "expectedMinutes",
+      "cleanSheetProb0",
+      "squadNumbers"
+    ],
+    "note": "The result, the two goalscorers and Abidal's dismissal are matters of record. The line-ups here are a best-effort reconstruction, the benches are padded to eighteen a side to exercise the full 36-card fixture, and the two substitutions are invented to exercise the SUB path -- they are labelled RECONSTRUCTED in the event notes. Expected-points priors are modelling inputs, not historical data. Nothing in this file should be cited as a source for what happened in the match.",
+    "squadNumbersNote": "Shirt numbers are the 2008-09 squad numbers for these clubs and are listed as reconstructed, not verified: they were not checked against a matchday team sheet. Players whose number could not be stated with confidence carry no `number` field at all, and the app renders an empty slot rather than a guess."
+  },
+  "clock": {
+    "fullMatch": 90,
+    "stoppageAllowed": true
+  },
+  "players": [
+    {
+      "id": 0,
+      "name": "Petr Cech",
+      "team": 0,
+      "position": "GK",
+      "starter": true,
+      "expectedEventPoints": "0.5",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0.30",
+      "number": 1
+    },
+    {
+      "id": 1,
+      "name": "Jose Bosingwa",
+      "team": 0,
+      "position": "DEF",
+      "starter": true,
+      "expectedEventPoints": "1.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0.30",
+      "number": 17
+    },
+    {
+      "id": 2,
+      "name": "John Terry",
+      "team": 0,
+      "position": "DEF",
+      "starter": true,
+      "expectedEventPoints": "1.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0.30",
+      "number": 26
+    },
+    {
+      "id": 3,
+      "name": "Alex",
+      "team": 0,
+      "position": "DEF",
+      "starter": true,
+      "expectedEventPoints": "1.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0.30",
+      "number": 33
+    },
+    {
+      "id": 4,
+      "name": "Ashley Cole",
+      "team": 0,
+      "position": "DEF",
+      "starter": true,
+      "expectedEventPoints": "1.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0.30",
+      "number": 3
+    },
+    {
+      "id": 5,
+      "name": "Michael Essien",
+      "team": 0,
+      "position": "MID",
+      "starter": true,
+      "expectedEventPoints": "2.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0",
+      "number": 5
+    },
+    {
+      "id": 6,
+      "name": "John Obi Mikel",
+      "team": 0,
+      "position": "MID",
+      "starter": true,
+      "expectedEventPoints": "2.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0",
+      "number": 12
+    },
+    {
+      "id": 7,
+      "name": "Frank Lampard",
+      "team": 0,
+      "position": "MID",
+      "starter": true,
+      "expectedEventPoints": "3.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0",
+      "number": 8
+    },
+    {
+      "id": 8,
+      "name": "Michael Ballack",
+      "team": 0,
+      "position": "MID",
+      "starter": true,
+      "expectedEventPoints": "2.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0",
+      "number": 13
+    },
+    {
+      "id": 9,
+      "name": "Florent Malouda",
+      "team": 0,
+      "position": "MID",
+      "starter": true,
+      "expectedEventPoints": "2.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0",
+      "number": 15
+    },
+    {
+      "id": 10,
+      "name": "Didier Drogba",
+      "team": 0,
+      "position": "FWD",
+      "starter": true,
+      "expectedEventPoints": "4.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0",
+      "number": 11
+    },
+    {
+      "id": 11,
+      "name": "Nicolas Anelka",
+      "team": 0,
+      "position": "FWD",
+      "starter": false,
+      "expectedEventPoints": "1.5",
+      "expectedMinutes": 25,
+      "cleanSheetProb0": "0",
+      "number": 39
+    },
+    {
+      "id": 12,
+      "name": "Salomon Kalou",
+      "team": 0,
+      "position": "FWD",
+      "starter": false,
+      "expectedEventPoints": "1.5",
+      "expectedMinutes": 25,
+      "cleanSheetProb0": "0",
+      "number": 21
+    },
+    {
+      "id": 13,
+      "name": "Juliano Belletti",
+      "team": 0,
+      "position": "DEF",
+      "starter": false,
+      "expectedEventPoints": "0.5",
+      "expectedMinutes": 25,
+      "cleanSheetProb0": "0.30",
+      "number": 35
+    },
+    {
+      "id": 14,
+      "name": "Hilario",
+      "team": 0,
+      "position": "GK",
+      "starter": false,
+      "expectedEventPoints": "0.25",
+      "expectedMinutes": 25,
+      "cleanSheetProb0": "0.30"
+    },
+    {
+      "id": 15,
+      "name": "Branislav Ivanovic",
+      "team": 0,
+      "position": "DEF",
+      "starter": false,
+      "expectedEventPoints": "0.5",
+      "expectedMinutes": 25,
+      "cleanSheetProb0": "0.30",
+      "number": 2
+    },
+    {
+      "id": 16,
+      "name": "Deco",
+      "team": 0,
+      "position": "MID",
+      "starter": false,
+      "expectedEventPoints": "1.0",
+      "expectedMinutes": 25,
+      "cleanSheetProb0": "0",
+      "number": 20
+    },
+    {
+      "id": 17,
+      "name": "Franco Di Santo",
+      "team": 0,
+      "position": "FWD",
+      "starter": false,
+      "expectedEventPoints": "1.5",
+      "expectedMinutes": 25,
+      "cleanSheetProb0": "0"
+    },
+    {
+      "id": 18,
+      "name": "Victor Valdes",
+      "team": 1,
+      "position": "GK",
+      "starter": true,
+      "expectedEventPoints": "0.5",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0.30",
+      "number": 1
+    },
+    {
+      "id": 19,
+      "name": "Carles Puyol",
+      "team": 1,
+      "position": "DEF",
+      "starter": true,
+      "expectedEventPoints": "1.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0.30",
+      "number": 5
+    },
+    {
+      "id": 20,
+      "name": "Yaya Toure",
+      "team": 1,
+      "position": "DEF",
+      "starter": true,
+      "expectedEventPoints": "1.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0.30",
+      "number": 24
+    },
+    {
+      "id": 21,
+      "name": "Eric Abidal",
+      "team": 1,
+      "position": "DEF",
+      "starter": true,
+      "expectedEventPoints": "1.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0.30",
+      "number": 22
+    },
+    {
+      "id": 22,
+      "name": "Sylvinho",
+      "team": 1,
+      "position": "DEF",
+      "starter": true,
+      "expectedEventPoints": "1.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0.30"
+    },
+    {
+      "id": 23,
+      "name": "Xavi",
+      "team": 1,
+      "position": "MID",
+      "starter": true,
+      "expectedEventPoints": "2.5",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0",
+      "number": 6
+    },
+    {
+      "id": 24,
+      "name": "Sergio Busquets",
+      "team": 1,
+      "position": "MID",
+      "starter": true,
+      "expectedEventPoints": "2.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0",
+      "number": 16
+    },
+    {
+      "id": 25,
+      "name": "Andres Iniesta",
+      "team": 1,
+      "position": "MID",
+      "starter": true,
+      "expectedEventPoints": "2.5",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0",
+      "number": 8
+    },
+    {
+      "id": 26,
+      "name": "Lionel Messi",
+      "team": 1,
+      "position": "FWD",
+      "starter": true,
+      "expectedEventPoints": "5.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0",
+      "number": 10
+    },
+    {
+      "id": 27,
+      "name": "Samuel Etoo",
+      "team": 1,
+      "position": "FWD",
+      "starter": true,
+      "expectedEventPoints": "4.0",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0",
+      "number": 9
+    },
+    {
+      "id": 28,
+      "name": "Thierry Henry",
+      "team": 1,
+      "position": "FWD",
+      "starter": true,
+      "expectedEventPoints": "3.5",
+      "expectedMinutes": 90,
+      "cleanSheetProb0": "0",
+      "number": 7
+    },
+    {
+      "id": 29,
+      "name": "Seydou Keita",
+      "team": 1,
+      "position": "MID",
+      "starter": false,
+      "expectedEventPoints": "1.0",
+      "expectedMinutes": 25,
+      "cleanSheetProb0": "0"
+    },
+    {
+      "id": 30,
+      "name": "Bojan Krkic",
+      "team": 1,
+      "position": "FWD",
+      "starter": false,
+      "expectedEventPoints": "1.5",
+      "expectedMinutes": 25,
+      "cleanSheetProb0": "0",
+      "number": 11
+    },
+    {
+      "id": 31,
+      "name": "Pedro Rodriguez",
+      "team": 1,
+      "position": "FWD",
+      "starter": false,
+      "expectedEventPoints": "1.5",
+      "expectedMinutes": 25,
+      "cleanSheetProb0": "0"
+    },
+    {
+      "id": 32,
+      "name": "Jose Manuel Pinto",
+      "team": 1,
+      "position": "GK",
+      "starter": false,
+      "expectedEventPoints": "0.25",
+      "expectedMinutes": 25,
+      "cleanSheetProb0": "0.30",
+      "number": 13
+    },
+    {
+      "id": 33,
+      "name": "Martin Caceres",
+      "team": 1,
+      "position": "DEF",
+      "starter": false,
+      "expectedEventPoints": "0.5",
+      "expectedMinutes": 25,
+      "cleanSheetProb0": "0.30"
+    },
+    {
+      "id": 34,
+      "name": "Rafael Marquez",
+      "team": 1,
+      "position": "DEF",
+      "starter": false,
+      "expectedEventPoints": "0.5",
+      "expectedMinutes": 25,
+      "cleanSheetProb0": "0.30",
+      "number": 4
+    },
+    {
+      "id": 35,
+      "name": "Victor Sanchez",
+      "team": 1,
+      "position": "MID",
+      "starter": false,
+      "expectedEventPoints": "1.0",
+      "expectedMinutes": 25,
+      "cleanSheetProb0": "0"
+    }
+  ],
+  "events": [
+    {
+      "minute": 5,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 9,
+      "type": "GOAL",
+      "players": [
+        5
+      ],
+      "note": "Michael Essien opens the scoring for Chelsea."
+    },
+    {
+      "minute": 10,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 15,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 20,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 25,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 30,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 35,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 40,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 45,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 50,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 55,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 60,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 65,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 65,
+      "type": "SUB",
+      "players": [
+        9,
+        12
+      ],
+      "note": "RECONSTRUCTED: Malouda off, Kalou on."
+    },
+    {
+      "minute": 66,
+      "type": "RED",
+      "players": [
+        21
+      ],
+      "note": "Eric Abidal sent off; Barcelona down to ten."
+    },
+    {
+      "minute": 70,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 71,
+      "type": "SUB",
+      "players": [
+        28,
+        29
+      ],
+      "note": "RECONSTRUCTED: Henry off, Keita on."
+    },
+    {
+      "minute": 75,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 80,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 85,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 90,
+      "type": "HEARTBEAT",
+      "players": [],
+      "note": "clock advance"
+    },
+    {
+      "minute": 93,
+      "type": "GOAL",
+      "players": [
+        25
+      ],
+      "note": "Andres Iniesta equalises in stoppage time. Barcelona advance on away goals."
+    }
+  ]
+}
