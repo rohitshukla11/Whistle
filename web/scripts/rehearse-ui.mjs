@@ -11,7 +11,7 @@
  * forwards `eth_sendTransaction` to anvil, which signs as the impersonated demo
  * user — so no private key is handled here at all.
  *
- *   node scripts/rehearse-ui.mjs --url http://127.0.0.1:3100 --rpc http://127.0.0.1:8545
+ *   node scripts/rehearse-ui.mjs --url https://localhost:3100 --rpc http://127.0.0.1:8545
  */
 
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -27,7 +27,7 @@ const arg = (name, fallback) => {
   return i > 0 ? process.argv[i + 1] : fallback;
 };
 
-const BASE = arg("url", "http://127.0.0.1:3100");
+const BASE = arg("url", "https://localhost:3100");
 const RPC = arg("rpc", "http://127.0.0.1:8545");
 const USER = arg("user", "");
 const OUT = resolve(arg("out", "docs/screens/rehearsal"));

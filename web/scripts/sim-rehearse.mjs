@@ -24,7 +24,7 @@ const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const arg = (n, d) => { const i = process.argv.indexOf(`--${n}`); return i > 0 ? process.argv[i + 1] : d; };
 const OUT = arg("out", "/tmp/sim-rehearse");
 const RPC = arg("rpc", "http://127.0.0.1:8545");
-const BASE = arg("url", "http://127.0.0.1:3100");
+const BASE = arg("url", "https://localhost:3100");
 const TOKEN = process.env.SIM_ADMIN_TOKEN;
 const USER = process.env.DEMO_USER_ADDRESS ?? process.env.TOKYO2_USER_ADDRESS;
 const D = JSON.parse(process.env.DEPLOYMENT_JSON);

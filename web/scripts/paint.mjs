@@ -6,7 +6,7 @@
  * browser is in, and the only honest way to measure the wait they will actually
  * sit through.
  *
- *   node scripts/paint.mjs --url http://127.0.0.1:3100 --fixture 20090506 --runs 3
+ *   node scripts/paint.mjs --url https://localhost:3100 --fixture 20090506 --runs 3
  */
 
 import puppeteer from "puppeteer-core";
@@ -18,7 +18,7 @@ const arg = (name, fallback) => {
   return i > 0 ? process.argv[i + 1] : fallback;
 };
 
-const BASE = arg("url", "http://127.0.0.1:3100");
+const BASE = arg("url", "https://localhost:3100");
 const FIXTURE = arg("fixture", "20090506");
 const RUNS = Number(arg("runs", "3"));
 const LABEL = arg("label", "");

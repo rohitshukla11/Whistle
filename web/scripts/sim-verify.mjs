@@ -11,7 +11,7 @@ import { createPublicClient, http, encodeFunctionData, parseAbi, parseEventLogs,
 import { privateKeyToAccount, generatePrivateKey } from "viem/accounts";
 import { sepolia } from "viem/chains";
 
-const OUT = process.argv[2], RPC = "http://127.0.0.1:8545", BASE = "http://127.0.0.1:3100";
+const OUT = process.argv[2], RPC = "http://127.0.0.1:8545", BASE = "https://localhost:3100";
 /** Which mandate the Revoke beat targets. /agents lists every one on the fixture. */
 const REVOKE_TARGET = process.env.REVOKE_TARGET ?? "agent-1.vault.whistle.eth";
 const OP = process.env.OPERATOR, TOKEN = process.env.SIM_ADMIN_TOKEN;

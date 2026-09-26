@@ -7,7 +7,7 @@
  * screenshots, and a provider that could sign would be a provider that could
  * spend.
  *
- *   node scripts/shots.mjs --url http://127.0.0.1:3100 --wallet 0x… --rpc http://127.0.0.1:8545
+ *   node scripts/shots.mjs --url https://localhost:3100 --wallet 0x… --rpc http://127.0.0.1:8545
  */
 
 import { mkdirSync } from "node:fs";
@@ -22,7 +22,7 @@ const arg = (name, fallback) => {
   return i > 0 ? process.argv[i + 1] : fallback;
 };
 
-const BASE = arg("url", "http://127.0.0.1:3100");
+const BASE = arg("url", "https://localhost:3100");
 const RPC = arg("rpc", "http://127.0.0.1:8545");
 const WALLET = arg("wallet", "");
 const OUT = resolve(arg("out", "docs/screens"));
