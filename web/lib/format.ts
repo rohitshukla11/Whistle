@@ -41,6 +41,7 @@ export function usdcShort(value: bigint | undefined): string {
   const sign = negative ? "-" : "";
   if (whole >= 1_000_000n) return `${sign}${(Number(whole) / 1_000_000).toFixed(2)}M`;
   if (whole >= 10_000n) return `${sign}${(Number(whole) / 1_000).toFixed(1)}k`;
+  if (whole >= 1_000n) return `${sign}${(Number(whole) / 1_000).toFixed(2)}k`;
   return `${sign}${whole.toLocaleString("en-US")}`;
 }
 

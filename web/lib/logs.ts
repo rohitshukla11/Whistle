@@ -192,6 +192,9 @@ function historyClient(): PublicClient {
   return logsClient;
 }
 
+/** The history client, for callers outside this module (the fixture list's score and movers). */
+export const logsPublicClient = historyClient;
+
 /**
  * Every matching event from `fromBlock` to the head.
  *
@@ -217,15 +220,19 @@ export async function scanAddressLogs(
 
   const cacheKey = `${address.toLowerCase()}:*:${fromBlock}`;
   const hit = resultCache.get(cacheKey) ?? loadPersisted<unknown>(cacheKey);
-  if (hit && hit.failed === 0 && (hit.final || latest - hit.toBlock < 50n)) {
+  if (hit && hit.failed === 0 && (hit.final || hit.toBlock >= latest)) {
     resultCache.set(cacheKey, hit);
     return hit as LogScan<{ transactionHash: `0x${string}` | null; blockNumber: bigint | null }>;
   }
 
-  const out: { transactionHash: `0x${string}` | null; blockNumber: bigint | null }[] = [];
+  // Extend a clean cached scan rather than reuse it stale — see scanLogs.
+  const resumeFrom = hit && hit.failed === 0 && hit.toBlock > fromBlock + 6n ? hit.toBlock - 6n : null;
+  const out: { transactionHash: `0x${string}` | null; blockNumber: bigint | null }[] = resumeFrom === null
+    ? []
+    : (hit!.logs as { transactionHash: `0x${string}` | null; blockNumber: bigint | null }[]).filter((l) => (l.blockNumber ?? 0n) < resumeFrom);
   let failed = 0;
   let spanIndex = 0;
-  let from = fromBlock;
+  let from = resumeFrom ?? fromBlock;
   let requests = 0;
 
   let backoffs = 0;
@@ -275,7 +282,7 @@ export async function scanLogs<T>(
 
   const cacheKey = cacheKeyFor(query.address, query.eventName, fromBlock, query.args);
   const hit = resultCache.get(cacheKey) ?? loadPersisted<unknown>(cacheKey);
-  if (hit && hit.failed === 0 && (hit.final || latest - hit.toBlock < 50n)) {
+  if (hit && hit.failed === 0 && (hit.final || hit.toBlock >= latest)) {
     resultCache.set(cacheKey, hit);
     console.info(
       `[logs] ${label} ${hit.final ? "from snapshot" : "cached"}: ${hit.logs.length} logs, ` +
@@ -284,10 +291,24 @@ export async function scanLogs<T>(
     return hit as LogScan<T>;
   }
 
-  const out: T[] = [];
+  /*
+   * A cached scan is a prefix, not an answer.
+   *
+   * The cache used to be reused as-is for fifty blocks, so anything logged after
+   * it was taken stayed invisible for up to ten minutes. Demo 1's settlement
+   * screen, opened at 85', kept reading 1–0 after the 93' goal and a reload. Now
+   * a clean cached scan is extended from where it stopped — re-reading its last
+   * few blocks, because an endpoint can serve a block before it has indexed that
+   * block's logs — and merged without duplicates.
+   */
+  const REREAD = 6n;
+  const resumeFrom = hit && hit.failed === 0 && hit.toBlock > fromBlock + REREAD ? hit.toBlock - REREAD : null;
+  const out: T[] = resumeFrom === null
+    ? []
+    : (hit!.logs as { blockNumber?: bigint }[]).filter((l) => (l.blockNumber ?? 0n) < resumeFrom) as T[];
   let failed = 0;
   let spanIndex = 0;
-  let from = fromBlock;
+  let from = resumeFrom ?? fromBlock;
   let requests = 0;
   let backoffs = 0;
 

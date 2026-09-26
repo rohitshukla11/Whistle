@@ -18,16 +18,29 @@
   "agentCapUSDC": "500",
   "tradedPlayerIds": [
     0,
+    2,
+    4,
     5,
     9,
+    10,
     18,
+    19,
     21,
+    25,
     26
   ],
   "pooledCards": {
     "0": {
       "name": "Petr Cech",
       "card": "0xD0aADE06caaF73f409Ee378A81ad60F89755144e"
+    },
+    "2": {
+      "name": "John Terry",
+      "card": "0x3Dc3E5E70bbef0ED8Ad5De05dFF6Fb670f9320cd"
+    },
+    "4": {
+      "name": "Ashley Cole",
+      "card": "0x46baCf3ac0cB4189cd643C0CA804dc1a38dEa469"
     },
     "5": {
       "name": "Michael Essien",
@@ -37,13 +50,25 @@
       "name": "Florent Malouda",
       "card": "0xe5bbCB75218F0A0BA07c1Fd91FF1DDA51eD12B3E"
     },
+    "10": {
+      "name": "Didier Drogba",
+      "card": "0x2192E29a47371085cC2ED82BDC66d284339112F2"
+    },
     "18": {
       "name": "Victor Valdes",
       "card": "0xfb8c391c9d7a82A38860b7Be307E4E4fc8848AC5"
     },
+    "19": {
+      "name": "Carles Puyol",
+      "card": "0xd1806C990486FA9284f763320521c85382d3549b"
+    },
     "21": {
       "name": "Eric Abidal",
       "card": "0x0840b091611821ccB0F7133EA076f12bEc7B084A"
+    },
+    "25": {
+      "name": "Andres Iniesta",
+      "card": "0xbf8432ceEA4F8b7B9b48b26D599158338fB20091"
     },
     "26": {
       "name": "Lionel Messi",

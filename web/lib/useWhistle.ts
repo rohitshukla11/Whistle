@@ -790,6 +790,11 @@ function fmtUnits(v: bigint | undefined): string {
  */
 export function describe(err: unknown): string {
   const message = err instanceof Error ? err.message : String(err);
+  // The 5% holder cap, in words: a card nobody holds yet cannot be minted by a
+  // wallet that is not cap-exempt, because the first mint would be 100% of it.
+  if (/HolderCapExceeded/.test(message)) {
+    return "Refused by the 5% holder cap: no wallet may hold more than 5% of a card's supply, and this card has too little supply yet. Mint a pooled card, or a smaller amount.";
+  }
   const first = message.split("\n")[0] ?? message;
 
   const unreachable =
