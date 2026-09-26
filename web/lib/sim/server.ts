@@ -165,7 +165,8 @@ export async function signerBusy(pc: PublicClient, address: Address): Promise<bo
  * `scripts/derive-keys.ts`) and takes the three for whichever fixture the panel
  * is driving. `SIM_AGENT_KEYS` still works, and wins, for a one-fixture setup.
  *
- * Local-server feature: the file lives in `.secrets/`, which is not deployed.
+ * Locally the file lives in `.secrets/`. A host with no files (Vercel) takes
+ * the same document inline: SIM_DERIVED_JSON, as JSON or base64 of it.
  */
 interface DerivedAgent {
   n: number;
@@ -177,11 +178,30 @@ interface DerivedAgent {
 
 /** The seed pre-creates agents 1..3; 4 and up are the managed pool (see `scripts/derive-keys.ts`). */
 const PREMADE_AGENTS = 3;
-const isActive = (a: DerivedAgent) => a.n <= PREMADE_AGENTS || Boolean(a.assigned);
+/**
+ * Every key is driven; the chain decides which ones act. The step runner reads
+ * each key's mandate first and skips a key with none on this fixture, so an
+ * unassigned pool key costs one read and does nothing. This used to rely on an
+ * `assigned` mark written back to the key file — which a read-only host
+ * cannot write.
+ */
+const isActive = (_a: DerivedAgent) => true;
+
+let inlineDerived: Record<string, DerivedAgent[]> | null = null;
+function inlineFixtures(): Record<string, DerivedAgent[]> | null {
+  const raw = process.env.SIM_DERIVED_JSON?.trim();
+  if (!raw) return null;
+  if (inlineDerived) return inlineDerived;
+  const text = raw.startsWith("{") ? raw : Buffer.from(raw, "base64").toString("utf8");
+  inlineDerived = (JSON.parse(text) as { fixtures?: Record<string, DerivedAgent[]> }).fixtures ?? {};
+  return inlineDerived;
+}
 
 let derivedCache: { mtimeMs: number; fixtures: Record<string, DerivedAgent[]> } | null = null;
 
 function derivedFixtures(): Record<string, DerivedAgent[]> {
+  const inline = inlineFixtures();
+  if (inline) return inline;
   const path = process.env.SIM_DERIVED_FILE;
   if (!path) return {};
   try {
@@ -215,17 +235,24 @@ export function managedPool(fixtureId: string): { n: number; account: Account }[
     .map((a) => ({ n: a.n, account: toAccount(a.key) }));
 }
 
-/** Record in the derived file that a pool key was handed out, so the step runner starts driving it. */
+/**
+ * Note in the local key file when a pool key was handed out. Bookkeeping only —
+ * what the key may do is on chain — so a host without a writable file skips it.
+ */
 export function markAssigned(fixtureId: string, address: Address): void {
   const path = process.env.SIM_DERIVED_FILE;
-  if (!path) throw new Error("SIM_DERIVED_FILE is not set on the server.");
-  const doc = JSON.parse(readFileSync(path, "utf8")) as { fixtures?: Record<string, DerivedAgent[]> };
-  const entry = doc.fixtures?.[String(fixtureId)]?.find((a) => a.address.toLowerCase() === address.toLowerCase());
-  if (!entry) throw new Error(`${address} is not in the managed pool for ${fixtureId}.`);
-  entry.assigned ??= new Date().toISOString();
-  writeFileSync(path, `${JSON.stringify(doc, null, 2)}\n`, { mode: 0o600 });
-  chmodSync(path, 0o600);
-  derivedCache = null;
+  if (!path || process.env.SIM_DERIVED_JSON) return;
+  try {
+    const doc = JSON.parse(readFileSync(path, "utf8")) as { fixtures?: Record<string, DerivedAgent[]> };
+    const entry = doc.fixtures?.[String(fixtureId)]?.find((a) => a.address.toLowerCase() === address.toLowerCase());
+    if (!entry) return;
+    entry.assigned ??= new Date().toISOString();
+    writeFileSync(path, `${JSON.stringify(doc, null, 2)}\n`, { mode: 0o600 });
+    chmodSync(path, 0o600);
+    derivedCache = null;
+  } catch (err) {
+    console.warn(`[sim] could not note the assignment in ${path}: ${String(err).split("\n")[0]}`);
+  }
 }
 
 export function publicClient(): PublicClient {
