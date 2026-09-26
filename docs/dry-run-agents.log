@@ -1,0 +1,116 @@
+agent 0x70997970C51812dc3A010C7d01b50e0d17dc79C8  agent-1.demo.whistle.eth  template protect
+agent 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC  agent-2.demo.whistle.eth  template protect
+agent 0x90F79bf6EB2c4f870365E785982E1f101E93b906  agent-3.demo.whistle.eth  template momentum
+agent 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65  agent-4.demo.whistle.eth  template momentum
+agent 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc  agent-5.demo.whistle.eth  template contrarian
+agent 0x976EA74026E726554dB657fA54763abd0C3a0aa9  agent-6.demo.whistle.eth  template contrarian
+watching MatchEvent on 0x8bd34faB379A74B72392deC518f3F2a53027fc2d
+
+
+5' HEARTBEAT  []
+
+9' GOAL  [5]
+  queued #1  agent-1.demo.whistle.eth SELL 120 protect: trimmed Andres Iniesta after -1571 bps
+    tx 0x295bfd2524082acb4cc9ebe1f0ec2eb41c785e5cc37974c6dbc2c64b0644dd15
+  queued #2  agent-2.demo.whistle.eth SELL 120 protect: trimmed Andres Iniesta after -1571 bps
+    tx 0x6cd613f586706561c6588b1a8944d981ffbcc85f206329a44fe9ded235911c1f
+
+10' HEARTBEAT  []
+  queued #3  agent-3.demo.whistle.eth BUY 24 momentum: bought Michael Essien on +7026 bps
+    tx 0xc63b630847136333564b710db73670acdf75cfbd76a4329de31d54ec89c40265
+  queued #4  agent-4.demo.whistle.eth BUY 24 momentum: bought Michael Essien on +7026 bps
+    tx 0x9e7fd8faf524cc03845199b70329e8ce5189c385540efd095872981bd8fb369b
+  queued #5  agent-5.demo.whistle.eth BUY 38 contrarian: faded Andres Iniesta at -1571 bps
+    tx 0x8f0405f21c7483044c5fd8a999fc8dd12d297e8b36776b14dd0c9bf81f8f3843
+  queued #6  agent-6.demo.whistle.eth BUY 38 contrarian: faded Andres Iniesta at -1571 bps
+    tx 0x8cbc1d7bd0911776305d4cb59cd2a2b7790206e0b496f01662c889c4cca09411
+  filled #1  agent-1.demo.whistle.eth  120 units for 618.4596 USDC
+  filled #2  agent-2.demo.whistle.eth  120 units for 618.4596 USDC
+  filled #5  agent-5.demo.whistle.eth  38 units for 197.7893 USDC
+  filled #6  agent-6.demo.whistle.eth  38 units for 197.7893 USDC
+  filled #3  agent-3.demo.whistle.eth  24 units for 249.2426 USDC
+  filled #4  agent-4.demo.whistle.eth  24 units for 249.2426 USDC
+
+15' HEARTBEAT  []
+    ens agent-1.demo.whistle.eth last-action = "protect: trimmed Andres Iniesta after -1571 bps (120 units, 618.4596 USDC)"
+    tx  0x77d6c9da5bb8c1f0de198fdac69bd32afff01ada912409e4698951438a20953d
+    ens agent-1.demo.whistle.eth status = "active"
+    tx  0xb51e5cb369fa39f5a27ff362b40388cb1794f5a4ea246bed28b777878c1eb823
+    ens agent-2.demo.whistle.eth last-action = "protect: trimmed Andres Iniesta after -1571 bps (120 units, 618.4596 USDC)"
+    tx  0xb410a87864dee48aed046bc7e3fa26f85e14270c50f6f57932ecc5e2c6b39676
+    ens agent-2.demo.whistle.eth status = "active"
+    tx  0x7204b28cc79dd5c4ffd2f6fb157542a5c501b9a09050dce727c5b872fcc88603
+    ens agent-5.demo.whistle.eth last-action = "contrarian: faded Andres Iniesta at -1571 bps (38 units, 197.7893 USDC)"
+    tx  0xf35e05bdb2c4e1d70b81c58353c78b12795b2aa7622f2f3e6aa95038a7d0f430
+    ens agent-5.demo.whistle.eth status = "active"
+    tx  0xa7289ad67b4f819d206ad740e0d49345a37e15e9f5adccf480f30c3092127433
+    ens agent-6.demo.whistle.eth last-action = "contrarian: faded Andres Iniesta at -1571 bps (38 units, 197.7893 USDC)"
+    tx  0x7680f1e372372bf3b96884820226c20f47a38de33ce095fb4a9a2a6f36a936bf
+    ens agent-6.demo.whistle.eth status = "active"
+    tx  0x9fb4d0509a996b3794094293d3eb56028e2c41731cf6cb33e5dfd5b78f3037e5
+    ens agent-3.demo.whistle.eth last-action = "momentum: bought Michael Essien on +7026 bps (24 units, 249.2426 USDC)"
+    tx  0xef74d8f5dc979914bb9223f643528076b7ab5655874b0c98c538dfbdcb93580d
+    ens agent-3.demo.whistle.eth status = "active"
+    tx  0xe0416c970af0a43bc2374dc3659d3fc892016b6317d5b87183e8b9f93e1e50d0
+    ens agent-4.demo.whistle.eth last-action = "momentum: bought Michael Essien on +7026 bps (24 units, 249.2426 USDC)"
+    tx  0xe219636ad5c9cb6ebc96fab652a41e38e734ca1b7a84b2e57724f122e3490a1a
+    ens agent-4.demo.whistle.eth status = "active"
+    tx  0xa122811ecb8e5fac1c0ae45dd480a473f9362f2b08b641620858f1566fdb1fad
+
+20' HEARTBEAT  []
+
+25' HEARTBEAT  []
+
+30' HEARTBEAT  []
+
+35' HEARTBEAT  []
+
+40' HEARTBEAT  []
+
+45' HEARTBEAT  []
+
+50' HEARTBEAT  []
+
+55' HEARTBEAT  []
+
+60' HEARTBEAT  []
+
+65' HEARTBEAT  []
+
+65' SUB  [9, 12]
+
+66' RED  [17]
+  queued #7  agent-3.demo.whistle.eth BUY 33 momentum: bought Petr Cech on +134 bps
+    tx 0x1d34bc6f0054d0011bd8df430f39825b1cc28be49eb195256b3991f5c16d2fa4
+  queued #8  agent-4.demo.whistle.eth BUY 33 momentum: bought Petr Cech on +134 bps
+    tx 0x8fc57d07b02e0e7473fc994f4901022cfd5eadc75eedf536b2d3a4661af923e2
+
+70' HEARTBEAT  []
+
+71' SUB  [24, 25]
+  filled #7  agent-3.demo.whistle.eth  33 units for 255.4964 USDC
+  filled #8  agent-4.demo.whistle.eth  33 units for 255.4964 USDC
+    ens agent-3.demo.whistle.eth last-action = "momentum: bought Petr Cech on +134 bps (33 units, 255.4964 USDC)"
+    tx  0x306ad035befdbaf8cb8f7d07f9a25b0ea70d679cc7f1fd9ace53b1343e1e14b3
+    ens agent-3.demo.whistle.eth status = "active"
+    tx  0x091c0c5d7736ce08ed9ca714a609158aee59db699757173a96d48edccbedae09
+    ens agent-4.demo.whistle.eth last-action = "momentum: bought Petr Cech on +134 bps (33 units, 255.4964 USDC)"
+    tx  0xac89e85b8148e33b0594f549ec6dd150267ec6dd8c63a2a04ad099fefd61c787
+    ens agent-4.demo.whistle.eth status = "active"
+    tx  0x67368421fdf31002c2b065cc45a82647ffe27d7bf8959812910ef55368556319
+
+75' HEARTBEAT  []
+
+80' HEARTBEAT  []
+
+85' HEARTBEAT  []
+
+90' HEARTBEAT  []
+
+93' GOAL  [21]
+  refused  agent-1.demo.whistle.eth: fixture is not LIVE
+  refused  agent-2.demo.whistle.eth: fixture is not LIVE
+  refused  agent-3.demo.whistle.eth: fixture is not LIVE
+  refused  agent-4.demo.whistle.eth: fixture is not LIVE
+  refused  agent-5.demo.whistle.eth: fixture is not LIVE
+  refused  agent-6.demo.whistle.eth: fixture is not LIVE

@@ -1,0 +1,86 @@
+{
+  "totalMs": 3979206,
+  "sitDownToPayoutsMs": 3654506,
+  "beats": [
+    {
+      "n": 1,
+      "name": "Kickoff and the board",
+      "startedAt": 1790139628449,
+      "endedAt": 1790139631569,
+      "chainWaitMs": 0,
+      "uiWaitMs": 2010,
+      "shot": "/Users/rohitshukla/whistle/docs/screens/rehearsal/beat-1.png",
+      "errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "mismatches": []
+    },
+    {
+      "n": 2,
+      "name": "9' Essien reprice",
+      "startedAt": 1790139631569,
+      "endedAt": 1790139948033,
+      "chainWaitMs": 0,
+      "uiWaitMs": 0,
+      "shot": "/Users/rohitshukla/whistle/docs/screens/rehearsal/beat-2.png",
+      "errors": [],
+      "mismatches": []
+    },
+    {
+      "n": 3,
+      "name": "Agents screen and mandates",
+      "startedAt": 1790139948034,
+      "endedAt": 1790139953149,
+      "chainWaitMs": 0,
+      "uiWaitMs": 4015,
+      "shot": "/Users/rohitshukla/whistle/docs/screens/rehearsal/beat-3.png",
+      "errors": [],
+      "mismatches": []
+    },
+    {
+      "n": 4,
+      "name": "66' red card",
+      "startedAt": 1790139953149,
+      "endedAt": 1790140851299,
+      "chainWaitMs": 593366,
+      "uiWaitMs": 0,
+      "shot": "/Users/rohitshukla/whistle/docs/screens/rehearsal/beat-4.png",
+      "errors": [],
+      "mismatches": [
+        "beat threw: ContractFunctionExecutionError: The request took too long to respond.\n\nURL: http://127.0.0.1:8545/\nRequest body: {\"method\":\"eth_call\",\"params\":[{\"data\":\"0x44a0432f0000000000000000000000000000000000000"
+      ]
+    },
+    {
+      "n": 5,
+      "name": "Pause, Revoke, reverted attempt",
+      "startedAt": 1790140851299,
+      "endedAt": 1790142927246,
+      "chainWaitMs": 1076343,
+      "uiWaitMs": 4016,
+      "shot": "/Users/rohitshukla/whistle/docs/screens/rehearsal/beat-5.png",
+      "errors": [],
+      "mismatches": [
+        "Revoke did not take effect within 120s"
+      ]
+    },
+    {
+      "n": 6,
+      "name": "Payouts on the settled fixture",
+      "startedAt": 1790142927246,
+      "endedAt": 1790143607655,
+      "chainWaitMs": 0,
+      "uiWaitMs": 0,
+      "shot": "/Users/rohitshukla/whistle/docs/screens/rehearsal/beat-6.png",
+      "errors": [],
+      "mismatches": [
+        "settled fixture does not say Settled",
+        "Essien return not shown",
+        "Abidal return not shown",
+        "settled snapshot missing"
+      ]
+    }
+  ],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ]
+}

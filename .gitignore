@@ -46,6 +46,13 @@ web/next-env.d.ts
 # change every run does not belong in history.
 web/docs/screens/
 
+# --------------------------------------------------------------- write-ups
+# Project notes and the docs/ folder (run books, demo script, screenshots).
+!/WORLD_DEBRIEF.md
+!/FEEDBACK.md
+!/ENS_NOTES.md
+!/docs/**
+
 # ----------------------------------------------- never, under any circumstances
 .env
 .env.*

@@ -1,0 +1,14 @@
+settlement snapshot  718822.6666 USDC
+holders to redeem    15 signers + the vault
+
+vault closeCard Petr Cech            0x81ff01565378186a10557eadc7b0bdf04592741da3946ba698772ca7449c47e9
+vault closeCard Michael Essien       0x605c9557cd6dea784fc840791f8a7fbf8e67b18d19d165a7ddfcda0d00a8f5dc
+vault closeCard Andres Iniesta       0xb9d494d17fa1b037a64aa4cb863ce8acf4e5499f071b25d70e6ade11d21385b9
+vault closeReserve 0x08581b4ac9303f05d4a2513b3ca237d35c246fb58448922165c53ab993a19bd8
+
+
+redemptions          70
+paid out             596106.6882 USDC
+snapshot             718822.6666 USDC
+residue (dust)       33 wei  (0.0000 USDC)
+residue as fraction  0 of the pot

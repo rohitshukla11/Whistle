@@ -1,0 +1,868 @@
+========================================================================
+  Chelsea v Barcelona — UEFA Champions League, Semi-final, second leg
+  2009-05-06, Stamford Bridge, London. Final score 1-1.
+========================================================================
+fixtureId        20090506
+players          28
+events           23
+compressed clock 90' -> 10 min
+order delay L    30s wall  ≈ 4.5 match minutes
+keeper           tick(page=20) every 8s
+
+derived final scores (S), from the event list alone:
+   0 Petr Cech                     8 pts  (90')
+   1 Jose Bosingwa                10 pts  (90')
+   2 John Terry                   10 pts  (90')
+   3 Alex                         10 pts  (90')
+   4 Ashley Cole                  10 pts  (90')
+   5 Michael Essien               22 pts  (90')
+   6 John Obi Mikel               10 pts  (90')
+   7 Frank Lampard                10 pts  (90')
+   8 Michael Ballack              10 pts  (90')
+   9 Florent Malouda      7.222222222222222222 pts  (65')
+  10 Didier Drogba                10 pts  (90')
+  12 Salomon Kalou        2.777777777777777777 pts  (25')
+  14 Victor Valdes                 8 pts  (90')
+  15 Carles Puyol                 10 pts  (90')
+  16 Yaya Toure                   10 pts  (90')
+  17 Eric Abidal          2.333333333333333333 pts  (66')
+  18 Sylvinho                     10 pts  (90')
+  19 Xavi                         10 pts  (90')
+  20 Sergio Busquets              10 pts  (90')
+  21 Andres Iniesta               22 pts  (90')
+  22 Lionel Messi                 10 pts  (90')
+  23 Samuel Etoo                  10 pts  (90')
+  24 Thierry Henry        7.888888888888888888 pts  (71')
+  25 Seydou Keita         2.111111111111111111 pts  (19')
+
+network          Sepolia (11155111)
+oracle           0x68343Aa0598b7FCAA102769D172e59cdDfae10f2
+keeper           0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+MatchOracle      0x8bd34faB379A74B72392deC518f3F2a53027fc2d
+SettlementPot    0xc1A9f632F54f9d18b68f538e079Cc89ABfC68ADF
+WhistleHook      0x6d81754281fc5b378D36CE5A9EB6B90383850088
+
+KICKOFF
+  tx kickoff                    0x5c420b67eab41f783e294f398f2039a774c749f434c504b4fa72ff00dcac148f  block 11754054  gas 68388
+
+  [trace] next 5' in 33s
+  [trace] woke for 5'
+5' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 5'
+  tx postEvent 5' HEARTBEAT     0x9ba54e1752ecc92216b0f3c36417fd9294e9f93ed5b98aea0838dbaf9f72bc0f  block 11754055  gas 71954
+  [trace] reading R table
+      Petr Cech            R =     6.5940 USDC
+      Jose Bosingwa        R =     6.8302 USDC
+      John Terry           R =     6.8302 USDC
+      Alex                 R =     6.8302 USDC
+      Ashley Cole          R =     6.8302 USDC
+      Michael Essien       R =     5.9466 USDC
+      John Obi Mikel       R =     5.9466 USDC
+      Frank Lampard        R =     6.4189 USDC
+      Michael Ballack      R =     5.9466 USDC
+      Florent Malouda      R =     5.9466 USDC
+      Didier Drogba        R =     6.8913 USDC
+      Nicolas Anelka       R =     2.0207 USDC
+      Salomon Kalou        R =     2.0207 USDC
+      Juliano Belletti     R =     1.5484 USDC
+      Victor Valdes        R =     6.5940 USDC
+      Carles Puyol         R =     6.8302 USDC
+      Yaya Toure           R =     6.8302 USDC
+      Eric Abidal          R =     6.8302 USDC
+      Sylvinho             R =     6.8302 USDC
+      Xavi                 R =     6.1828 USDC
+      Sergio Busquets      R =     5.9466 USDC
+      Andres Iniesta       R =     6.1828 USDC
+      Lionel Messi         R =     7.3637 USDC
+      Samuel Etoo          R =     6.8913 USDC
+      Thierry Henry        R =     6.6551 USDC
+      Seydou Keita         R =     1.7845 USDC
+      Bojan Krkic          R =     2.0207 USDC
+      Pedro Rodriguez      R =     2.0207 USDC
+
+  [trace] next 9' in 27s
+  [trace] woke for 9'
+9' GOAL  Michael Essien   (Michael Essien opens the scoring for Chelsea.)
+  [trace] sending postEvent 9'
+  tx postEvent 9' GOAL          0x2710892e0c82f7c6c1d25719429afc2a19e8e611bddb268e94422be6cae3c8ee  block 11754056  gas 217762
+  [trace] reading R table
+      Petr Cech            R =     5.7049 USDC
+      Jose Bosingwa        R =     5.8963 USDC
+      John Terry           R =     5.8963 USDC
+      Alex                 R =     5.8963 USDC
+      Ashley Cole          R =     5.8963 USDC
+    * Michael Essien       R =    10.1250 USDC
+      John Obi Mikel       R =     5.0199 USDC
+      Frank Lampard        R =     5.4028 USDC
+      Michael Ballack      R =     5.0199 USDC
+      Florent Malouda      R =     5.0199 USDC
+      Didier Drogba        R =     5.7857 USDC
+      Nicolas Anelka       R =     1.6378 USDC
+      Salomon Kalou        R =     1.6378 USDC
+      Juliano Belletti     R =     1.2549 USDC
+      Victor Valdes        R =     3.5948 USDC
+      Carles Puyol         R =     4.6371 USDC
+      Yaya Toure           R =     4.6371 USDC
+      Eric Abidal          R =     4.6371 USDC
+      Sylvinho             R =     4.6371 USDC
+      Xavi                 R =     5.2114 USDC
+      Sergio Busquets      R =     5.0199 USDC
+      Andres Iniesta       R =     5.2114 USDC
+      Lionel Messi         R =     6.1686 USDC
+      Samuel Etoo          R =     5.7857 USDC
+      Thierry Henry        R =     5.5943 USDC
+      Seydou Keita         R =     1.4464 USDC
+      Bojan Krkic          R =     1.6378 USDC
+      Pedro Rodriguez      R =     1.6378 USDC
+
+  [trace] next 10' in 7s
+  [trace] woke for 10'
+10' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 10'
+  tx postEvent 10' HEARTBEAT    0x038e55c68e6308bb765213aa04e1bffad901c5410f123f6b2c1734a295e70216  block 11754060  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     5.7314 USDC
+      Jose Bosingwa        R =     5.9206 USDC
+      John Terry           R =     5.9206 USDC
+      Alex                 R =     5.9206 USDC
+      Ashley Cole          R =     5.9206 USDC
+      Michael Essien       R =    10.1199 USDC
+      John Obi Mikel       R =     5.0126 USDC
+      Frank Lampard        R =     5.3910 USDC
+      Michael Ballack      R =     5.0126 USDC
+      Florent Malouda      R =     5.0126 USDC
+      Didier Drogba        R =     5.7693 USDC
+      Nicolas Anelka       R =     1.6183 USDC
+      Salomon Kalou        R =     1.6183 USDC
+      Juliano Belletti     R =     1.2400 USDC
+      Victor Valdes        R =     3.5940 USDC
+      Carles Puyol         R =     4.6343 USDC
+      Yaya Toure           R =     4.6343 USDC
+      Eric Abidal          R =     4.6343 USDC
+      Sylvinho             R =     4.6343 USDC
+      Xavi                 R =     5.2018 USDC
+      Sergio Busquets      R =     5.0126 USDC
+      Andres Iniesta       R =     5.2018 USDC
+      Lionel Messi         R =     6.1476 USDC
+      Samuel Etoo          R =     5.7693 USDC
+      Thierry Henry        R =     5.5801 USDC
+      Seydou Keita         R =     1.4291 USDC
+      Bojan Krkic          R =     1.6183 USDC
+      Pedro Rodriguez      R =     1.6183 USDC
+
+  [trace] next 15' in 33s
+  keeper tick  head 0/6  0x3e532f27b7c1d5d6cb5def279b9e74044567755b0ba0f469beae89bf8bad1372  gas 84233  logs 0
+  keeper tick  head 0/6  0xcbe8b81ffad02babd4c3646a68f7896716cd941dcdd8a459aab0789f32fd53d8  gas 84233  logs 0
+  keeper tick  head 0/6  0x36e78c5ee819bdd219aa614aec0ad286a71076bcfcb58141333d6194d386365a  gas 84233  logs 0
+  [trace] woke for 15'
+15' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 15'
+  tx postEvent 15' HEARTBEAT    0x38d1af3444b33493e0a34a7e4cdc8e3a6f383d747c47e1b631801ef2857e5e38  block 11754067  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     5.8647 USDC
+      Jose Bosingwa        R =     6.0424 USDC
+      John Terry           R =     6.0424 USDC
+      Alex                 R =     6.0424 USDC
+      Ashley Cole          R =     6.0424 USDC
+      Michael Essien       R =    10.0943 USDC
+      John Obi Mikel       R =     4.9761 USDC
+      Frank Lampard        R =     5.3315 USDC
+      Michael Ballack      R =     4.9761 USDC
+      Florent Malouda      R =     4.9761 USDC
+      Didier Drogba        R =     5.6869 USDC
+      Nicolas Anelka       R =     1.5204 USDC
+      Salomon Kalou        R =     1.5204 USDC
+      Juliano Belletti     R =     1.1650 USDC
+      Victor Valdes        R =     3.5899 USDC
+      Carles Puyol         R =     4.6206 USDC
+      Yaya Toure           R =     4.6206 USDC
+      Eric Abidal          R =     4.6206 USDC
+      Sylvinho             R =     4.6206 USDC
+      Xavi                 R =     5.1538 USDC
+      Sergio Busquets      R =     4.9761 USDC
+      Andres Iniesta       R =     5.1538 USDC
+      Lionel Messi         R =     6.0424 USDC
+      Samuel Etoo          R =     5.6869 USDC
+      Thierry Henry        R =     5.5092 USDC
+      Seydou Keita         R =     1.3427 USDC
+      Bojan Krkic          R =     1.5204 USDC
+      Pedro Rodriguez      R =     1.5204 USDC
+
+  [trace] next 20' in 33s
+  keeper tick  head 0/6  0x9788406d90529b912fe727b0dc952a6238594664d1a93226ac61f32d3e4e55aa  gas 1505853  logs 42
+  [trace] woke for 20'
+20' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 20'
+  tx postEvent 20' HEARTBEAT    0x1b07f10a491db59b29480aa764fe3f682dd7b25df83bec8a821a72091a8f0031  block 11754081  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     5.9984 USDC
+      Jose Bosingwa        R =     6.1647 USDC
+      John Terry           R =     6.1647 USDC
+      Alex                 R =     6.1647 USDC
+      Ashley Cole          R =     6.1647 USDC
+      Michael Essien       R =    10.0687 USDC
+      John Obi Mikel       R =     4.9393 USDC
+      Frank Lampard        R =     5.2718 USDC
+      Michael Ballack      R =     4.9393 USDC
+      Florent Malouda      R =     4.9393 USDC
+      Didier Drogba        R =     5.6042 USDC
+      Nicolas Anelka       R =     1.4221 USDC
+      Salomon Kalou        R =     1.4221 USDC
+      Juliano Belletti     R =     1.0897 USDC
+      Victor Valdes        R =     3.5857 USDC
+      Carles Puyol         R =     4.6069 USDC
+      Yaya Toure           R =     4.6069 USDC
+      Eric Abidal          R =     4.6069 USDC
+      Sylvinho             R =     4.6069 USDC
+      Xavi                 R =     5.1055 USDC
+      Sergio Busquets      R =     4.9393 USDC
+      Andres Iniesta       R =     5.1055 USDC
+      Lionel Messi         R =     5.9367 USDC
+      Samuel Etoo          R =     5.6042 USDC
+      Thierry Henry        R =     5.4380 USDC
+      Seydou Keita         R =     1.2559 USDC
+      Bojan Krkic          R =     1.4221 USDC
+      Pedro Rodriguez      R =     1.4221 USDC
+
+  [trace] next 25' in 33s
+  [trace] woke for 25'
+25' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 25'
+  tx postEvent 25' HEARTBEAT    0xdf38b6088fcb7451e352031cfea648936cc1c00681f1dfbcc7bdede22b3f7ae3  block 11754082  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     6.1328 USDC
+      Jose Bosingwa        R =     6.2875 USDC
+      John Terry           R =     6.2875 USDC
+      Alex                 R =     6.2875 USDC
+      Ashley Cole          R =     6.2875 USDC
+      Michael Essien       R =    10.0429 USDC
+      John Obi Mikel       R =     4.9024 USDC
+      Frank Lampard        R =     5.2118 USDC
+      Michael Ballack      R =     4.9024 USDC
+      Florent Malouda      R =     4.9024 USDC
+      Didier Drogba        R =     5.5212 USDC
+      Nicolas Anelka       R =     1.3234 USDC
+      Salomon Kalou        R =     1.3234 USDC
+      Juliano Belletti     R =     1.0140 USDC
+      Victor Valdes        R =     3.5816 USDC
+      Carles Puyol         R =     4.5930 USDC
+      Yaya Toure           R =     4.5930 USDC
+      Eric Abidal          R =     4.5930 USDC
+      Sylvinho             R =     4.5930 USDC
+      Xavi                 R =     5.0571 USDC
+      Sergio Busquets      R =     4.9024 USDC
+      Andres Iniesta       R =     5.0571 USDC
+      Lionel Messi         R =     5.8306 USDC
+      Samuel Etoo          R =     5.5212 USDC
+      Thierry Henry        R =     5.3665 USDC
+      Seydou Keita         R =     1.1687 USDC
+      Bojan Krkic          R =     1.3234 USDC
+      Pedro Rodriguez      R =     1.3234 USDC
+
+  [trace] next 30' in 33s
+  [trace] woke for 30'
+30' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 30'
+  tx postEvent 30' HEARTBEAT    0xd0cad2aac651cc146602b37d4415eebc3a9ecc65740939f7c5723276a3704cbc  block 11754083  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     6.2677 USDC
+      Jose Bosingwa        R =     6.4108 USDC
+      John Terry           R =     6.4108 USDC
+      Alex                 R =     6.4108 USDC
+      Ashley Cole          R =     6.4108 USDC
+      Michael Essien       R =    10.0170 USDC
+      John Obi Mikel       R =     4.8654 USDC
+      Frank Lampard        R =     5.1516 USDC
+      Michael Ballack      R =     4.8654 USDC
+      Florent Malouda      R =     4.8654 USDC
+      Didier Drogba        R =     5.4378 USDC
+      Nicolas Anelka       R =     1.2243 USDC
+      Salomon Kalou        R =     1.2243 USDC
+      Juliano Belletti     R =     0.9381 USDC
+      Victor Valdes        R =     3.5775 USDC
+      Carles Puyol         R =     4.5792 USDC
+      Yaya Toure           R =     4.5792 USDC
+      Eric Abidal          R =     4.5792 USDC
+      Sylvinho             R =     4.5792 USDC
+      Xavi                 R =     5.0085 USDC
+      Sergio Busquets      R =     4.8654 USDC
+      Andres Iniesta       R =     5.0085 USDC
+      Lionel Messi         R =     5.7240 USDC
+      Samuel Etoo          R =     5.4378 USDC
+      Thierry Henry        R =     5.2947 USDC
+      Seydou Keita         R =     1.0812 USDC
+      Bojan Krkic          R =     1.2243 USDC
+      Pedro Rodriguez      R =     1.2243 USDC
+
+  [trace] next 35' in 33s
+  [trace] woke for 35'
+35' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 35'
+  tx postEvent 35' HEARTBEAT    0x6f02938462fe1921edf4405a314c01a34f9adf6d36ed8e5b556a28acc2fe8d4d  block 11754084  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     6.4033 USDC
+      Jose Bosingwa        R =     6.5347 USDC
+      John Terry           R =     6.5347 USDC
+      Alex                 R =     6.5347 USDC
+      Ashley Cole          R =     6.5347 USDC
+      Michael Essien       R =     9.9909 USDC
+      John Obi Mikel       R =     4.8281 USDC
+      Frank Lampard        R =     5.0911 USDC
+      Michael Ballack      R =     4.8281 USDC
+      Florent Malouda      R =     4.8281 USDC
+      Didier Drogba        R =     5.3540 USDC
+      Nicolas Anelka       R =     1.1247 USDC
+      Salomon Kalou        R =     1.1247 USDC
+      Juliano Belletti     R =     0.8617 USDC
+      Victor Valdes        R =     3.5733 USDC
+      Carles Puyol         R =     4.5652 USDC
+      Yaya Toure           R =     4.5652 USDC
+      Eric Abidal          R =     4.5652 USDC
+      Sylvinho             R =     4.5652 USDC
+      Xavi                 R =     4.9596 USDC
+      Sergio Busquets      R =     4.8281 USDC
+      Andres Iniesta       R =     4.9596 USDC
+      Lionel Messi         R =     5.6169 USDC
+      Samuel Etoo          R =     5.3540 USDC
+      Thierry Henry        R =     5.2225 USDC
+      Seydou Keita         R =     0.9932 USDC
+      Bojan Krkic          R =     1.1247 USDC
+      Pedro Rodriguez      R =     1.1247 USDC
+
+  [trace] next 40' in 33s
+  [trace] woke for 40'
+40' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 40'
+  tx postEvent 40' HEARTBEAT    0xf95e6d2e0a8ff27dbb0247c70dc7f99dbc6183e92e625684c6653185067c786b  block 11754085  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     6.5394 USDC
+      Jose Bosingwa        R =     6.6592 USDC
+      John Terry           R =     6.6592 USDC
+      Alex                 R =     6.6592 USDC
+      Ashley Cole          R =     6.6592 USDC
+      Michael Essien       R =     9.9648 USDC
+      John Obi Mikel       R =     4.7908 USDC
+      Frank Lampard        R =     5.0303 USDC
+      Michael Ballack      R =     4.7908 USDC
+      Florent Malouda      R =     4.7908 USDC
+      Didier Drogba        R =     5.2698 USDC
+      Nicolas Anelka       R =     1.0246 USDC
+      Salomon Kalou        R =     1.0246 USDC
+      Juliano Belletti     R =     0.7851 USDC
+      Victor Valdes        R =     3.5691 USDC
+      Carles Puyol         R =     4.5512 USDC
+      Yaya Toure           R =     4.5512 USDC
+      Eric Abidal          R =     4.5512 USDC
+      Sylvinho             R =     4.5512 USDC
+      Xavi                 R =     4.9105 USDC
+      Sergio Busquets      R =     4.7908 USDC
+      Andres Iniesta       R =     4.9105 USDC
+      Lionel Messi         R =     5.5094 USDC
+      Samuel Etoo          R =     5.2698 USDC
+      Thierry Henry        R =     5.1501 USDC
+      Seydou Keita         R =     0.9049 USDC
+      Bojan Krkic          R =     1.0246 USDC
+      Pedro Rodriguez      R =     1.0246 USDC
+
+  [trace] next 45' in 33s
+  [trace] woke for 45'
+45' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 45'
+  tx postEvent 45' HEARTBEAT    0x96518720ac64accad6b5cd81925729706b4ca63894840b9cdce2a188833d3584  block 11754086  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     6.6761 USDC
+      Jose Bosingwa        R =     6.7841 USDC
+      John Terry           R =     6.7841 USDC
+      Alex                 R =     6.7841 USDC
+      Ashley Cole          R =     6.7841 USDC
+      Michael Essien       R =     9.9386 USDC
+      John Obi Mikel       R =     4.7532 USDC
+      Frank Lampard        R =     4.9693 USDC
+      Michael Ballack      R =     4.7532 USDC
+      Florent Malouda      R =     4.7532 USDC
+      Didier Drogba        R =     5.1853 USDC
+      Nicolas Anelka       R =     0.9242 USDC
+      Salomon Kalou        R =     0.9242 USDC
+      Juliano Belletti     R =     0.7081 USDC
+      Victor Valdes        R =     3.5649 USDC
+      Carles Puyol         R =     4.5371 USDC
+      Yaya Toure           R =     4.5371 USDC
+      Eric Abidal          R =     4.5371 USDC
+      Sylvinho             R =     4.5371 USDC
+      Xavi                 R =     4.8612 USDC
+      Sergio Busquets      R =     4.7532 USDC
+      Andres Iniesta       R =     4.8612 USDC
+      Lionel Messi         R =     5.4014 USDC
+      Samuel Etoo          R =     5.1853 USDC
+      Thierry Henry        R =     5.0773 USDC
+      Seydou Keita         R =     0.8162 USDC
+      Bojan Krkic          R =     0.9242 USDC
+      Pedro Rodriguez      R =     0.9242 USDC
+
+  [trace] next 50' in 33s
+  [trace] woke for 50'
+50' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 50'
+  tx postEvent 50' HEARTBEAT    0x72c4801863374e0ec61437f6baeb7cc267a4d15832e6657c680c1f0dfab83451  block 11754087  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     6.8134 USDC
+      Jose Bosingwa        R =     6.9097 USDC
+      John Terry           R =     6.9097 USDC
+      Alex                 R =     6.9097 USDC
+      Ashley Cole          R =     6.9097 USDC
+      Michael Essien       R =     9.9122 USDC
+      John Obi Mikel       R =     4.7155 USDC
+      Frank Lampard        R =     4.9080 USDC
+      Michael Ballack      R =     4.7155 USDC
+      Florent Malouda      R =     4.7155 USDC
+      Didier Drogba        R =     5.1004 USDC
+      Nicolas Anelka       R =     0.8233 USDC
+      Salomon Kalou        R =     0.8233 USDC
+      Juliano Belletti     R =     0.6308 USDC
+      Victor Valdes        R =     3.5607 USDC
+      Carles Puyol         R =     4.5230 USDC
+      Yaya Toure           R =     4.5230 USDC
+      Eric Abidal          R =     4.5230 USDC
+      Sylvinho             R =     4.5230 USDC
+      Xavi                 R =     4.8117 USDC
+      Sergio Busquets      R =     4.7155 USDC
+      Andres Iniesta       R =     4.8117 USDC
+      Lionel Messi         R =     5.2929 USDC
+      Samuel Etoo          R =     5.1004 USDC
+      Thierry Henry        R =     5.0042 USDC
+      Seydou Keita         R =     0.7271 USDC
+      Bojan Krkic          R =     0.8233 USDC
+      Pedro Rodriguez      R =     0.8233 USDC
+
+  [trace] next 55' in 33s
+  [trace] woke for 55'
+55' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 55'
+  tx postEvent 55' HEARTBEAT    0xad4e39e491404678018d3be46ee58dbf4bf8f2ddd4a0e1cab548568fe9b20599  block 11754088  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     6.9513 USDC
+      Jose Bosingwa        R =     7.0357 USDC
+      John Terry           R =     7.0357 USDC
+      Alex                 R =     7.0357 USDC
+      Ashley Cole          R =     7.0357 USDC
+      Michael Essien       R =     9.8857 USDC
+      John Obi Mikel       R =     4.6776 USDC
+      Frank Lampard        R =     4.8464 USDC
+      Michael Ballack      R =     4.6776 USDC
+      Florent Malouda      R =     4.6776 USDC
+      Didier Drogba        R =     5.0152 USDC
+      Nicolas Anelka       R =     0.7220 USDC
+      Salomon Kalou        R =     0.7220 USDC
+      Juliano Belletti     R =     0.5532 USDC
+      Victor Valdes        R =     3.5564 USDC
+      Carles Puyol         R =     4.5088 USDC
+      Yaya Toure           R =     4.5088 USDC
+      Eric Abidal          R =     4.5088 USDC
+      Sylvinho             R =     4.5088 USDC
+      Xavi                 R =     4.7620 USDC
+      Sergio Busquets      R =     4.6776 USDC
+      Andres Iniesta       R =     4.7620 USDC
+      Lionel Messi         R =     5.1840 USDC
+      Samuel Etoo          R =     5.0152 USDC
+      Thierry Henry        R =     4.9308 USDC
+      Seydou Keita         R =     0.6376 USDC
+      Bojan Krkic          R =     0.7220 USDC
+      Pedro Rodriguez      R =     0.7220 USDC
+
+  [trace] next 60' in 33s
+  [trace] woke for 60'
+60' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 60'
+  tx postEvent 60' HEARTBEAT    0x2ce6135556e8633bbe02d18184cd696c3116506207a4e1f518faa0634e1d1a2d  block 11754089  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     7.0899 USDC
+      Jose Bosingwa        R =     7.1624 USDC
+      John Terry           R =     7.1624 USDC
+      Alex                 R =     7.1624 USDC
+      Ashley Cole          R =     7.1624 USDC
+      Michael Essien       R =     9.8591 USDC
+      John Obi Mikel       R =     4.6396 USDC
+      Frank Lampard        R =     4.7846 USDC
+      Michael Ballack      R =     4.6396 USDC
+      Florent Malouda      R =     4.6396 USDC
+      Didier Drogba        R =     4.9295 USDC
+      Nicolas Anelka       R =     0.6202 USDC
+      Salomon Kalou        R =     0.6202 USDC
+      Juliano Belletti     R =     0.4752 USDC
+      Victor Valdes        R =     3.5522 USDC
+      Carles Puyol         R =     4.4946 USDC
+      Yaya Toure           R =     4.4946 USDC
+      Eric Abidal          R =     4.4946 USDC
+      Sylvinho             R =     4.4946 USDC
+      Xavi                 R =     4.7121 USDC
+      Sergio Busquets      R =     4.6396 USDC
+      Andres Iniesta       R =     4.7121 USDC
+      Lionel Messi         R =     5.0745 USDC
+      Samuel Etoo          R =     4.9295 USDC
+      Thierry Henry        R =     4.8571 USDC
+      Seydou Keita         R =     0.5477 USDC
+      Bojan Krkic          R =     0.6202 USDC
+      Pedro Rodriguez      R =     0.6202 USDC
+
+  [trace] next 65' in 33s
+  [trace] woke for 65'
+65' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 65'
+  tx postEvent 65' HEARTBEAT    0x60089aa38cd75765052fa9a17fcaedb313453e352ef2c4bc86d1445db002ad1b  block 11754090  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     7.2290 USDC
+      Jose Bosingwa        R =     7.2895 USDC
+      John Terry           R =     7.2895 USDC
+      Alex                 R =     7.2895 USDC
+      Ashley Cole          R =     7.2895 USDC
+      Michael Essien       R =     9.8324 USDC
+      John Obi Mikel       R =     4.6014 USDC
+      Frank Lampard        R =     4.7224 USDC
+      Michael Ballack      R =     4.6014 USDC
+      Florent Malouda      R =     4.6014 USDC
+      Didier Drogba        R =     4.8435 USDC
+      Nicolas Anelka       R =     0.5179 USDC
+      Salomon Kalou        R =     0.5179 USDC
+      Juliano Belletti     R =     0.3969 USDC
+      Victor Valdes        R =     3.5479 USDC
+      Carles Puyol         R =     4.4803 USDC
+      Yaya Toure           R =     4.4803 USDC
+      Eric Abidal          R =     4.4803 USDC
+      Sylvinho             R =     4.4803 USDC
+      Xavi                 R =     4.6619 USDC
+      Sergio Busquets      R =     4.6014 USDC
+      Andres Iniesta       R =     4.6619 USDC
+      Lionel Messi         R =     4.9646 USDC
+      Samuel Etoo          R =     4.8435 USDC
+      Thierry Henry        R =     4.7830 USDC
+      Seydou Keita         R =     0.4574 USDC
+      Bojan Krkic          R =     0.5179 USDC
+      Pedro Rodriguez      R =     0.5179 USDC
+
+  [trace] next 65' in 0s
+  [trace] woke for 65'
+65' SUB  Florent Malouda -> Salomon Kalou   (RECONSTRUCTED: Malouda off, Kalou on.)
+  [trace] sending postEvent 65'
+  tx postEvent 65' SUB          0x3012426f9f8b68ae27100e5b09e20b171de14242270952457bad2f29ce7e7f87  block 11754091  gas 128386
+  [trace] reading R table
+      Petr Cech            R =     7.2583 USDC
+      Jose Bosingwa        R =     7.3191 USDC
+      John Terry           R =     7.3191 USDC
+      Alex                 R =     7.3191 USDC
+      Ashley Cole          R =     7.3191 USDC
+      Michael Essien       R =     9.8723 USDC
+      John Obi Mikel       R =     4.6200 USDC
+      Frank Lampard        R =     4.7416 USDC
+      Michael Ballack      R =     4.6200 USDC
+    * Florent Malouda      R =     3.1611 USDC
+      Didier Drogba        R =     4.8632 USDC
+      Nicolas Anelka       R =     0.5200 USDC
+    * Salomon Kalou        R =     0.5200 USDC
+      Juliano Belletti     R =     0.3985 USDC
+      Victor Valdes        R =     3.5623 USDC
+      Carles Puyol         R =     4.4985 USDC
+      Yaya Toure           R =     4.4985 USDC
+      Eric Abidal          R =     4.4985 USDC
+      Sylvinho             R =     4.4985 USDC
+      Xavi                 R =     4.6808 USDC
+      Sergio Busquets      R =     4.6200 USDC
+      Andres Iniesta       R =     4.6808 USDC
+      Lionel Messi         R =     4.9848 USDC
+      Samuel Etoo          R =     4.8632 USDC
+      Thierry Henry        R =     4.8024 USDC
+      Seydou Keita         R =     0.4593 USDC
+      Bojan Krkic          R =     0.5200 USDC
+      Pedro Rodriguez      R =     0.5200 USDC
+
+  [trace] next 66' in 6s
+  [trace] woke for 66'
+66' RED  Eric Abidal   (Eric Abidal sent off; Barcelona down to ten.)
+  [trace] sending postEvent 66'
+  tx postEvent 66' RED          0x2e0227e926f44c578cbc8a0a77160271ae958434fc33200aaaae00c3b82635f4  block 11754092  gas 93954
+  [trace] reading R table
+      Petr Cech            R =     7.3563 USDC
+      Jose Bosingwa        R =     7.4152 USDC
+      John Terry           R =     7.4152 USDC
+      Alex                 R =     7.4152 USDC
+      Ashley Cole          R =     7.4152 USDC
+      Michael Essien       R =     9.9616 USDC
+      John Obi Mikel       R =     4.6566 USDC
+      Frank Lampard        R =     4.7745 USDC
+      Michael Ballack      R =     4.6566 USDC
+      Florent Malouda      R =     3.1928 USDC
+      Didier Drogba        R =     4.8924 USDC
+      Nicolas Anelka       R =     0.5043 USDC
+      Salomon Kalou        R =     0.5534 USDC
+      Juliano Belletti     R =     0.3864 USDC
+      Victor Valdes        R =     3.5956 USDC
+      Carles Puyol         R =     4.5387 USDC
+      Yaya Toure           R =     4.5387 USDC
+    * Eric Abidal          R =     1.0315 USDC
+      Sylvinho             R =     4.5387 USDC
+      Xavi                 R =     4.7155 USDC
+      Sergio Busquets      R =     4.6566 USDC
+      Andres Iniesta       R =     4.7155 USDC
+      Lionel Messi         R =     5.0103 USDC
+      Samuel Etoo          R =     4.8924 USDC
+      Thierry Henry        R =     4.8334 USDC
+      Seydou Keita         R =     0.4453 USDC
+      Bojan Krkic          R =     0.5043 USDC
+      Pedro Rodriguez      R =     0.5043 USDC
+
+  [trace] next 70' in 27s
+  keeper tick  head 6/8  0xfd709f3204805eacdbc1f79aaf608b22b967d4741da68252d4487d6200b4e326  gas 55809  logs 0
+  keeper tick  head 6/8  0x7126a13b5bc9eae6527a4c51fcee0f9a5ca2412eb19c10753600bc7f3962c837  gas 55809  logs 0
+  keeper tick  head 6/8  0xaf22f03f0c2f4343119eae6cb9f997c81b466784897bf743678fddf5d775d36c  gas 55809  logs 0
+  [trace] woke for 70'
+70' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 70'
+  tx postEvent 70' HEARTBEAT    0xb60ed3ddd28e1381f6ff21b1191baa8f9ef2218769af1d515978edd3a1015916  block 11754098  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     7.4645 USDC
+      Jose Bosingwa        R =     7.5137 USDC
+      John Terry           R =     7.5137 USDC
+      Alex                 R =     7.5137 USDC
+      Ashley Cole          R =     7.5137 USDC
+      Michael Essien       R =     9.9331 USDC
+      John Obi Mikel       R =     4.6223 USDC
+      Frank Lampard        R =     4.7206 USDC
+      Michael Ballack      R =     4.6223 USDC
+      Florent Malouda      R =     3.1962 USDC
+      Didier Drogba        R =     4.8190 USDC
+      Nicolas Anelka       R =     0.4207 USDC
+      Salomon Kalou        R =     0.6665 USDC
+      Juliano Belletti     R =     0.3223 USDC
+      Victor Valdes        R =     3.5896 USDC
+      Carles Puyol         R =     4.5239 USDC
+      Yaya Toure           R =     4.5239 USDC
+      Eric Abidal          R =     1.0326 USDC
+      Sylvinho             R =     4.5239 USDC
+      Xavi                 R =     4.6715 USDC
+      Sergio Busquets      R =     4.6223 USDC
+      Andres Iniesta       R =     4.6715 USDC
+      Lionel Messi         R =     4.9173 USDC
+      Samuel Etoo          R =     4.8190 USDC
+      Thierry Henry        R =     4.7698 USDC
+      Seydou Keita         R =     0.3715 USDC
+      Bojan Krkic          R =     0.4207 USDC
+      Pedro Rodriguez      R =     0.4207 USDC
+
+  [trace] next 71' in 7s
+  keeper tick  head 6/8  0xb6e2d5c0338d7b6e645c760e69ea4f002e9b2d97ab34c24e8986bc29b78c804c  gas 55809  logs 0
+  [trace] woke for 71'
+71' SUB  Thierry Henry -> Seydou Keita   (RECONSTRUCTED: Henry off, Keita on.)
+  [trace] sending postEvent 71'
+  tx postEvent 71' SUB          0x6e6dee9b3fb296ef981bc29d295e001dfc94009acde37c25978ff694cb557e46  block 11754100  gas 136634
+  [trace] reading R table
+      Petr Cech            R =     7.5180 USDC
+      Jose Bosingwa        R =     7.5649 USDC
+      John Terry           R =     7.5649 USDC
+      Alex                 R =     7.5649 USDC
+      Ashley Cole          R =     7.5649 USDC
+      Michael Essien       R =     9.9609 USDC
+      John Obi Mikel       R =     4.6299 USDC
+      Frank Lampard        R =     4.7237 USDC
+      Michael Ballack      R =     4.6299 USDC
+      Florent Malouda      R =     3.2084 USDC
+      Didier Drogba        R =     4.8175 USDC
+      Nicolas Anelka       R =     0.4011 USDC
+      Salomon Kalou        R =     0.6973 USDC
+      Juliano Belletti     R =     0.3074 USDC
+      Victor Valdes        R =     3.6008 USDC
+      Carles Puyol         R =     4.5362 USDC
+      Yaya Toure           R =     4.5362 USDC
+      Eric Abidal          R =     1.0365 USDC
+      Sylvinho             R =     4.5362 USDC
+      Xavi                 R =     4.6768 USDC
+      Sergio Busquets      R =     4.6299 USDC
+      Andres Iniesta       R =     4.6768 USDC
+      Lionel Messi         R =     4.9113 USDC
+      Samuel Etoo          R =     4.8175 USDC
+    * Thierry Henry        R =     3.5045 USDC
+    * Seydou Keita         R =     0.3542 USDC
+      Bojan Krkic          R =     0.4011 USDC
+      Pedro Rodriguez      R =     0.4011 USDC
+
+  [trace] next 75' in 27s
+  keeper tick  head 6/8  0x4ab2611749b38dc2fc13fbb42cf75accd124a378e9df0e1e7ec1174020ccc61a  gas 577152  logs 17
+  [trace] woke for 75'
+75' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 75'
+  tx postEvent 75' HEARTBEAT    0xc3adcb31831a10020a2cc4cf12a645fddc57672393479519e016234a19a796c2  block 11754106  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     7.6213 USDC
+      Jose Bosingwa        R =     7.6583 USDC
+      John Terry           R =     7.6583 USDC
+      Alex                 R =     7.6583 USDC
+      Ashley Cole          R =     7.6583 USDC
+      Michael Essien       R =     9.9248 USDC
+      John Obi Mikel       R =     4.5920 USDC
+      Frank Lampard        R =     4.6661 USDC
+      Michael Ballack      R =     4.5920 USDC
+      Florent Malouda      R =     3.2095 USDC
+      Didier Drogba        R =     4.7402 USDC
+      Nicolas Anelka       R =     0.3168 USDC
+      Salomon Kalou        R =     0.8106 USDC
+      Juliano Belletti     R =     0.2427 USDC
+      Victor Valdes        R =     3.5921 USDC
+      Carles Puyol         R =     4.5180 USDC
+      Yaya Toure           R =     4.5180 USDC
+      Eric Abidal          R =     1.0369 USDC
+      Sylvinho             R =     4.5180 USDC
+      Xavi                 R =     4.6291 USDC
+      Sergio Busquets      R =     4.5920 USDC
+      Andres Iniesta       R =     4.6291 USDC
+      Lionel Messi         R =     4.8142 USDC
+      Samuel Etoo          R =     4.7402 USDC
+      Thierry Henry        R =     3.5057 USDC
+      Seydou Keita         R =     0.4773 USDC
+      Bojan Krkic          R =     0.3168 USDC
+      Pedro Rodriguez      R =     0.3168 USDC
+
+  [trace] next 80' in 33s
+  [trace] woke for 80'
+80' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 80'
+  tx postEvent 80' HEARTBEAT    0x3a3e4dbe9d9dc9310abe99b1289a35543db07796a475ed843387625b392ed746  block 11754107  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     7.7505 USDC
+      Jose Bosingwa        R =     7.7752 USDC
+      John Terry           R =     7.7752 USDC
+      Alex                 R =     7.7752 USDC
+      Ashley Cole          R =     7.7752 USDC
+      Michael Essien       R =     9.8796 USDC
+      John Obi Mikel       R =     4.5446 USDC
+      Frank Lampard        R =     4.5940 USDC
+      Michael Ballack      R =     4.5446 USDC
+      Florent Malouda      R =     3.2108 USDC
+      Didier Drogba        R =     4.6434 USDC
+      Nicolas Anelka       R =     0.2113 USDC
+      Salomon Kalou        R =     0.9522 USDC
+      Juliano Belletti     R =     0.1619 USDC
+      Victor Valdes        R =     3.5813 USDC
+      Carles Puyol         R =     4.4952 USDC
+      Yaya Toure           R =     4.4952 USDC
+      Eric Abidal          R =     1.0373 USDC
+      Sylvinho             R =     4.4952 USDC
+      Xavi                 R =     4.5693 USDC
+      Sergio Busquets      R =     4.5446 USDC
+      Andres Iniesta       R =     4.5693 USDC
+      Lionel Messi         R =     4.6928 USDC
+      Samuel Etoo          R =     4.6434 USDC
+      Thierry Henry        R =     3.5072 USDC
+      Seydou Keita         R =     0.6311 USDC
+      Bojan Krkic          R =     0.2113 USDC
+      Pedro Rodriguez      R =     0.2113 USDC
+
+  [trace] next 85' in 33s
+  [trace] woke for 85'
+85' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 85'
+  tx postEvent 85' HEARTBEAT    0xfd2ef3c376b90c6c47c689f271af1d39ee46aeb37900a78b31128d6ac2060391  block 11754108  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     7.8798 USDC
+      Jose Bosingwa        R =     7.8922 USDC
+      John Terry           R =     7.8922 USDC
+      Alex                 R =     7.8922 USDC
+      Ashley Cole          R =     7.8922 USDC
+      Michael Essien       R =     9.8344 USDC
+      John Obi Mikel       R =     4.4971 USDC
+      Frank Lampard        R =     4.5218 USDC
+      Michael Ballack      R =     4.4971 USDC
+      Florent Malouda      R =     3.2122 USDC
+      Didier Drogba        R =     4.5465 USDC
+      Nicolas Anelka       R =     0.1057 USDC
+      Salomon Kalou        R =     1.0940 USDC
+      Juliano Belletti     R =     0.0809 USDC
+      Victor Valdes        R =     3.5705 USDC
+      Carles Puyol         R =     4.4724 USDC
+      Yaya Toure           R =     4.4724 USDC
+      Eric Abidal          R =     1.0378 USDC
+      Sylvinho             R =     4.4724 USDC
+      Xavi                 R =     4.5095 USDC
+      Sergio Busquets      R =     4.4971 USDC
+      Andres Iniesta       R =     4.5095 USDC
+      Lionel Messi         R =     4.5712 USDC
+      Samuel Etoo          R =     4.5465 USDC
+      Thierry Henry        R =     3.5087 USDC
+      Seydou Keita         R =     0.7852 USDC
+      Bojan Krkic          R =     0.1057 USDC
+      Pedro Rodriguez      R =     0.1057 USDC
+
+  [trace] next 90' in 33s
+  [trace] woke for 90'
+90' HEARTBEAT   (clock advance)
+  [trace] sending postEvent 90'
+  tx postEvent 90' HEARTBEAT    0xf02c67c7ff17e72558856e61f4d56dd21093209c5af4ec9eee831a9812a23779  block 11754109  gas 54854
+  [trace] reading R table
+      Petr Cech            R =     8.0093 USDC
+      Jose Bosingwa        R =     8.0093 USDC
+      John Terry           R =     8.0093 USDC
+      Alex                 R =     8.0093 USDC
+      Ashley Cole          R =     8.0093 USDC
+      Michael Essien       R =     9.7891 USDC
+      John Obi Mikel       R =     4.4496 USDC
+      Frank Lampard        R =     4.4496 USDC
+      Michael Ballack      R =     4.4496 USDC
+      Florent Malouda      R =     3.2136 USDC
+      Didier Drogba        R =     4.4496 USDC
+      Nicolas Anelka       R =     0.0000 USDC
+      Salomon Kalou        R =     1.2360 USDC
+      Juliano Belletti     R =     0.0000 USDC
+      Victor Valdes        R =     3.5597 USDC
+      Carles Puyol         R =     4.4496 USDC
+      Yaya Toure           R =     4.4496 USDC
+      Eric Abidal          R =     1.0382 USDC
+      Sylvinho             R =     4.4496 USDC
+      Xavi                 R =     4.4496 USDC
+      Sergio Busquets      R =     4.4496 USDC
+      Andres Iniesta       R =     4.4496 USDC
+      Lionel Messi         R =     4.4496 USDC
+      Samuel Etoo          R =     4.4496 USDC
+      Thierry Henry        R =     3.5102 USDC
+      Seydou Keita         R =     0.9393 USDC
+      Bojan Krkic          R =     0.0000 USDC
+      Pedro Rodriguez      R =     0.0000 USDC
+
+  [trace] next 93' in 16s
+  [trace] woke for 93'
+93' GOAL  Andres Iniesta   (Andres Iniesta equalises in stoppage time. Barcelona advance on away goals.)
+  [trace] sending postEvent 93'
+  tx postEvent 93' GOAL         0x7758a731a05533251b8ada0aba685f9042fe0495f69984aef735404985a102d0  block 11754110  gas 217572
+  [trace] reading R table
+      Petr Cech            R =     3.6045 USDC
+      Jose Bosingwa        R =     4.5056 USDC
+      John Terry           R =     4.5056 USDC
+      Alex                 R =     4.5056 USDC
+      Ashley Cole          R =     4.5056 USDC
+      Michael Essien       R =     9.9123 USDC
+      John Obi Mikel       R =     4.5056 USDC
+      Frank Lampard        R =     4.5056 USDC
+      Michael Ballack      R =     4.5056 USDC
+      Florent Malouda      R =     3.2540 USDC
+      Didier Drogba        R =     4.5056 USDC
+      Nicolas Anelka       R =     0.0000 USDC
+      Salomon Kalou        R =     1.2515 USDC
+      Juliano Belletti     R =     0.0000 USDC
+      Victor Valdes        R =     3.6045 USDC
+      Carles Puyol         R =     4.5056 USDC
+      Yaya Toure           R =     4.5056 USDC
+      Eric Abidal          R =     1.0513 USDC
+      Sylvinho             R =     4.5056 USDC
+      Xavi                 R =     4.5056 USDC
+      Sergio Busquets      R =     4.5056 USDC
+    * Andres Iniesta       R =     9.9123 USDC
+      Lionel Messi         R =     4.5056 USDC
+      Samuel Etoo          R =     4.5056 USDC
+      Thierry Henry        R =     3.5544 USDC
+      Seydou Keita         R =     0.9511 USDC
+      Bojan Krkic          R =     0.0000 USDC
+      Pedro Rodriguez      R =     0.0000 USDC
+
+
+FULL TIME (clock 93')
+  tx postFinal                  0x9b1dfefac97b88d75c7ea19b875641744e7af68bb43d30aa1f16d9ac95c887d7  block 11754111  gas 952935
+  postFinal accepted the derived S[] — off-chain and on-chain scoring agree.
+
+settlement snapshot  718822.6666 USDC
+pot balance now      718822.6666 USDC (drains as holders redeem)
