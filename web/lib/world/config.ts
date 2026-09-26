@@ -2,8 +2,8 @@
  * World ID (sandbox IdP) configuration — server only.
  *
  * Everything comes from the environment (.secrets/sim.env on the local server):
- * WORLD_ISSUER, WORLD_CLIENT_ID, WORLD_PRIVATE_KEY_FILE (the private_key_jwt
- * signing key, RS256), WORLD_REDIRECT_URI (the exact registered callback) and
+ * WORLD_ISSUER, WORLD_CLIENT_ID, WORLD_PRIVATE_KEY or WORLD_PRIVATE_KEY_FILE (the
+ * private_key_jwt signing key, RS256), WORLD_REDIRECT_URI (the exact registered callback) and
  * NEXT_PUBLIC_APP_URL. Endpoints and signing keys are read from the IdP's own
  * discovery document, never hard-coded.
  */
@@ -30,12 +30,18 @@ export function worldConfig(): WorldConfig {
 
 let signingKey: { key: KeyObject; kid: string } | null = null;
 
-/** The private_key_jwt key, and the kid it was registered under (its RFC 7638 thumbprint). */
+/**
+ * The private_key_jwt key, and the kid it was registered under (its RFC 7638
+ * thumbprint). WORLD_PRIVATE_KEY holds the PEM itself (a host with no files,
+ * like Vercel; literal "\n" sequences are accepted), WORLD_PRIVATE_KEY_FILE a
+ * path to it (the local server).
+ */
 export function clientSigningKey(): { key: KeyObject; kid: string } {
   if (signingKey) return signingKey;
+  const inline = process.env.WORLD_PRIVATE_KEY;
   const file = process.env.WORLD_PRIVATE_KEY_FILE;
-  if (!file) throw new Error("WORLD_PRIVATE_KEY_FILE is not set on the server.");
-  const key = createPrivateKey(readFileSync(file));
+  if (!inline && !file) throw new Error("Set WORLD_PRIVATE_KEY (the PEM) or WORLD_PRIVATE_KEY_FILE on the server.");
+  const key = createPrivateKey(inline ? inline.replace(/\\n/g, "\n") : readFileSync(file!));
   const jwk = createPublicKey(key).export({ format: "jwk" }) as { e: string; kty: string; n: string };
   const kid = createHash("sha256").update(JSON.stringify({ e: jwk.e, kty: jwk.kty, n: jwk.n })).digest("base64url");
   signingKey = { key, kid };

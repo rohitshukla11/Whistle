@@ -19,7 +19,7 @@ export interface Human {
 }
 
 export interface CallbackDeps {
-  take(state: string): Pending | { expired: true; id: string } | undefined;
+  take(state: string): Promise<Pending | { expired: true; id: string } | undefined> | Pending | { expired: true; id: string } | undefined;
   /** Redeem the code with a fresh client assertion; throws WorldError on an OAuth error. */
   exchange(code: string, verifier: string): Promise<{ id_token: string }>;
   keyFor(kid: string | undefined): Promise<KeyObject | undefined>;
@@ -39,7 +39,7 @@ export async function completeCallback(
   deps: CallbackDeps,
 ): Promise<CallbackOutcome> {
   if (!q.state) return { status: "failed", reason: "missing_state" };
-  const taken = deps.take(q.state);
+  const taken = await deps.take(q.state);
   // Unknown state: never issued, already used (a replayed callback), or forged.
   if (!taken) return { status: "failed", reason: "state_mismatch" };
   if ("expired" in taken) return { status: "failed", reason: "expired" };

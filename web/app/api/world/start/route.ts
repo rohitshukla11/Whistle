@@ -50,7 +50,12 @@ export async function POST(req: Request) {
 
   const cfg = worldConfig();
   const { authorization_endpoint } = await discovery();
-  const p = createPending(action, payload, auth.signer);
+  let p;
+  try {
+    p = await createPending(action, payload, auth.signer);
+  } catch (err) {
+    return NextResponse.json({ error: (err as Error).message }, { status: 503 });
+  }
   const url = new URL(authorization_endpoint);
   url.search = new URLSearchParams({
     client_id: cfg.clientId,
@@ -64,6 +69,6 @@ export async function POST(req: Request) {
     max_age: "0",
     prompt: "login",
   }).toString();
-  putResult({ id: p.id, action, status: "pending", authorizeUrl: url.toString(), at: p.startedAt });
+  await putResult({ id: p.id, action, status: "pending", authorizeUrl: url.toString(), expiresAt: p.expiresAt, at: p.startedAt });
   return NextResponse.json({ id: p.id, authorizeUrl: url.toString(), expiresAt: p.expiresAt });
 }

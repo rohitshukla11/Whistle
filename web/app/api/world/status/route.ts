@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   const id = new URL(req.url).searchParams.get("id") ?? "";
-  const r = getResult(id);
+  const r = await getResult(id);
   if (!r) return NextResponse.json({ error: "Unknown attempt." }, { status: 404 });
   return NextResponse.json(r);
 }

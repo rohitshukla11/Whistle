@@ -53,7 +53,7 @@ export async function GET(req: Request) {
 
   const p = outcome.pending;
   if (p) {
-    putResult({
+    await putResult({
       id: p.id, action: p.action, status: outcome.status,
       ...(outcome.status === "approved" ? { detail: outcome.detail } : { reason: outcome.reason }),
       at: Date.now(),
